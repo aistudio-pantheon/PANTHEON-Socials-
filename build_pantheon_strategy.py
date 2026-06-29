@@ -253,15 +253,21 @@ def kpis():
     return sec("kpis","KPI Dashboard","Measure business impact, not just followers. Monthly targets.",
       '<div class="kgrid">'+cards+'</div><div class="chartbox"><h4>Pillar mix vs paid-media split</h4><div class="cv"><canvas id="cMix"></canvas></div></div>')
 
+import re as _re
+def _ig_embed(url):
+    m=_re.search(r"/(reel|p|tv)/([^/?#]+)",url or "")
+    return "https://www.instagram.com/reel/%s/embed"%m.group(2) if m else url
 def competitors():
     cards=""
     for c in COMP:
         reel=''
         if c["reel"]:
-            r=c["reel"]; reel='<a class="reflink" href="'+r[1]+'" target="_blank" rel="noopener"><span class="ti">▶ '+esc(r[0])+'</span><span class="cp">Copy this: '+esc(r[2])+'</span></a>'
+            r=c["reel"]
+            reel=('<div class="refnote">🎬 <b>'+esc(r[0])+'</b> — Copy this: '+esc(r[2])+'</div>'
+                  '<div class="igwrap"><iframe class="igframe" src="'+_ig_embed(r[1])+'" loading="lazy" scrolling="no" allowtransparency="true" allowfullscreen></iframe></div>')
         cards+=('<div class="ccard"><div class="ch">'+esc(c["h"])+'</div><div class="cnote">'+esc(c["note"])+'</div>'
           +reel+'<a class="cprofile" href="'+c["url"]+'" target="_blank" rel="noopener">Open profile →</a></div>')
-    return sec("competitors","Competitor Benchmarks","Six UAE developers to study. Reel links open ONE specific high-performing post.",'<div class="cgrid">'+cards+'</div>')
+    return sec("competitors","Competitor Benchmarks","Six UAE developers to study — each with one high-performing reel embedded inline to watch right here.",'<div class="cgrid">'+cards+'</div>')
 
 # execution sections render client-side
 EXEC_SECTIONS=('<section id="calendar" class="ps"><div class="ps-title">Calendar View</div>'
@@ -384,6 +390,21 @@ a{text-decoration:none}
 .ch{font-weight:900;color:var(--navy);font-size:14px}.cnote{font-size:12.5px;color:var(--gray);margin:5px 0 9px}
 .reflink{display:block;background:var(--gold-bg);border:1px solid var(--gold);border-radius:9px;padding:10px 12px;font-size:12.5px;margin-bottom:8px}
 .reflink .ti{color:#8a6418;font-weight:800}.reflink .cp{display:block;color:var(--gray);font-size:11.5px;margin-top:3px}
+.media{margin:12px 0}
+.igwrap{max-width:340px;margin:8px auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.igframe{width:100%;height:560px;border:0;display:block;background:#fff}
+.refnote{font-size:11.5px;color:var(--gray);margin-top:8px;line-height:1.4}.refnote b{color:#8a6418}
+.cdeck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
+.cslide{scroll-snap-align:center;flex:0 0 80%;max-width:300px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:14px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cslide .cn{font-size:11px;font-weight:800;color:var(--ink);background:var(--gold);align-self:flex-start;padding:3px 10px;border-radius:10px;letter-spacing:.5px}
+.cslide .ctxt{margin-top:12px;font-size:14.5px;color:#fff;font-weight:600;line-height:1.45}
+.cslide .cft{margin-top:auto;font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;padding-top:10px}
+.cdeckhint{font-size:11px;color:var(--gray);text-align:center;margin-top:-2px}
+.smock{max-width:300px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(200,146,42,.22),transparent),linear-gradient(180deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:16px;padding:24px;display:flex;flex-direction:column;text-align:center;box-shadow:var(--shadow-lg)}
+.smock .sbrand{font-size:11px;letter-spacing:4px;color:var(--gold);font-weight:800}
+.smock .shead{margin:auto 0;font-size:22px;font-weight:900;color:#fff;line-height:1.28}
+.smock .ssub{font-size:13px;color:var(--gold);margin-top:12px;font-weight:700}
+.smock .sfoot{font-size:10.5px;color:rgba(255,255,255,.6);margin-top:16px;letter-spacing:1px}
 .cprofile{font-size:12px;font-weight:700;color:var(--blue)}
 /* calendar */
 .calmonth{margin-bottom:24px}.calmonth h4{color:var(--navy);margin-bottom:8px;font-size:15px}
@@ -463,19 +484,32 @@ function jump(iso){const mon={'2026-07':'Jul','2026-08':'Aug','2026-09':'Sep'}[i
  const b=[...document.querySelectorAll('.fbtn')].find(x=>x.dataset.f===mon);if(b)b.click();
  document.getElementById('content').scrollIntoView({behavior:'smooth'})}
 /* posts */
-function brief(p){if(p.ftype==='Carousel')return `<details open><summary>🗂 Slide-by-slide (${p.detail.length})</summary><ul class="slides">${p.detail.map(s=>`<li ${ce()}>${esc(s)}</li>`).join('')}</ul></details>`;
+function igCode(u){const m=(u||'').match(/\/(reel|p|tv)\/([^/?#]+)/);return m?m[2]:''}
+function igEmbed(u){const c=igCode(u);return c?('https://www.instagram.com/reel/'+c+'/embed'):u}
+function igFrame(u){return `<div class="igwrap"><iframe class="igframe" src="${igEmbed(u)}" loading="lazy" scrolling="no" allowtransparency="true" allowfullscreen></iframe></div>`}
+function refNote(p){return p.ref.length?`<div class="refnote">🎬 Style reference: <b>${esc(p.ref[0][0])}</b> — ${esc(p.ref[0][2])}</div>`:''}
+function carouselDeck(p){
+ const slides=p.detail.map((s,i)=>{const k=s.indexOf(' — ');const lbl=k>0?s.slice(0,k):('Slide '+(i+1));const txt=k>0?s.slice(k+3):s;
+  return `<div class="cslide"><span class="cn">${esc(lbl)}</span><div class="ctxt" ${ce()}>${esc(txt)}</div><div class="cft">PANTHEON · @pantheon_development</div></div>`;}).join('');
+ return `<div class="cdeck">${slides}</div><div class="cdeckhint">← swipe the ${p.detail.length}-slide carousel →</div>`;}
+function staticMock(p){return `<div class="smock"><div class="sbrand">PANTHEON</div><div class="shead" ${ce()}>${esc(p.hook||p.title)}</div><div class="ssub" ${ce()}>${esc(p.cta)}</div><div class="sfoot">@pantheon_development</div></div>`;}
+function mediaBlock(p){
+ if(p.ftype==='Reel')return `<div class="media">${p.ref.length?igFrame(p.ref[0][1]):''}${refNote(p)}</div>`;
+ if(p.ftype==='Carousel')return `<div class="media">${carouselDeck(p)}${p.ref.length?`<details><summary>🎬 Style reference (video)</summary><div class="dbody">${igFrame(p.ref[0][1])}${refNote(p)}</div></details>`:''}</div>`;
+ return `<div class="media">${staticMock(p)}${p.ref.length?`<details><summary>🎬 Style reference (video)</summary><div class="dbody">${igFrame(p.ref[0][1])}${refNote(p)}</div></details>`:''}</div>`;}
+function brief(p){if(p.ftype==='Carousel')return `<details><summary>🗂 Slide copy (${p.detail.length})</summary><ul class="slides">${p.detail.map(s=>`<li ${ce()}>${esc(s)}</li>`).join('')}</ul></details>`;
  if(p.ftype==='Static')return `<details><summary>🎨 Design layout</summary><div class="dbody" ${ce()}>${esc(p.detail)}</div></details>`;
  return `<details><summary>🎬 Shot brief</summary><div class="dbody" ${ce()}>${esc(p.detail)}</div></details>`}
 function card(p){const c=D.pcolor[p.pillar];const badges=[`<span class="pill ft">${p.ftype}</span>`];
  if(p.peak)badges.push('<span class="pill peak">⭐ Peak</span>');if(p.boost)badges.push('<span class="pill boost">Boost</span>');
- const refs=p.ref.length?`<details><summary>▶ Reference — how it should look</summary><div class="dbody">${p.ref.map(r=>`<a class="reflink" href="${r[1]}" target="_blank" rel="noopener"><span class="ti">▶ ${esc(r[0])}</span><span class="cp">Copy this: ${esc(r[2])}</span></a>`).join('')}</div></details>`:'';
  return `<div class="post" data-pillar="${p.pillar}" data-ft="${p.ftype}" data-peak="${p.peak}" data-boost="${p.boost}" style="--c:${c}">
  <div class="top"><div class="date"><b>${p.date}</b> · ${p.day} ${p.time} · ${D.pname[p.pillar]}</div><div class="badges">${badges.join('')}</div></div>
  <h3 ${ce()}>${esc(p.title)}</h3><div class="hook" ${ce()}>“${esc(p.hook)}”</div>
+ ${mediaBlock(p)}
  <div class="cap" ${ce()}>${esc(p.caption)}</div><div class="tags" ${ce()}>${esc(p.tags)}</div>
  <div class="cta">CTA: <b>${esc(p.cta)}</b></div>${p.collab?`<div class="collabtag">🤝 ${esc(p.collab)}</div>`:''}
  <details><summary>🎨 Creative direction</summary><div class="dbody" ${ce()}>${esc(p.direction)}</div></details>
- ${brief(p)}<div class="storyline" ${ce()}>📱 Story tie-in: ${esc(p.story)}</div>${refs}</div>`}
+ ${brief(p)}<div class="storyline" ${ce()}>📱 Story tie-in: ${esc(p.story)}</div></div>`}
 function render(f){let ps=D.posts.slice();
  if(f&&f!=='all'){if(f==='peak')ps=ps.filter(p=>p.peak);else if(f==='boost')ps=ps.filter(p=>p.boost);
   else if(['Reel','Carousel','Static'].includes(f))ps=ps.filter(p=>p.ftype===f);

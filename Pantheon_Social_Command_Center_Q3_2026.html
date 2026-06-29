@@ -72,6 +72,22 @@ td.amt{color:var(--gold2);font-weight:700;white-space:nowrap}
 .compcard .take{font-size:13.5px;color:var(--muted);margin-bottom:12px}
 .reflink{display:block;background:var(--navy);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:9px;padding:11px 13px;margin-top:8px;font-size:13px}
 .reflink .ti{color:var(--gold2);font-weight:700}.reflink .cp{color:var(--muted);font-size:12px;margin-top:3px}.reflink:hover{border-color:var(--gold)}
+/* inline media: embedded reels, visual carousels, static mocks */
+.media{margin-top:12px}
+.igwrap{max-width:340px;margin:8px auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.igframe{width:100%;height:560px;border:0;display:block;background:#fff}
+.refnote{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4}.refnote b{color:var(--gold2)}
+.cdeck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
+.cslide{scroll-snap-align:center;flex:0 0 80%;max-width:300px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy3),var(--navy));border:1px solid var(--gold);border-radius:14px;padding:18px;display:flex;flex-direction:column;box-shadow:0 8px 22px -12px #000}
+.cslide .cn{font-size:11px;font-weight:800;color:#1a1404;background:var(--gold2);align-self:flex-start;padding:3px 10px;border-radius:10px;letter-spacing:.5px}
+.cslide .ctxt{margin-top:12px;font-size:14.5px;color:var(--text);font-weight:600;line-height:1.45}
+.cslide .cft{margin-top:auto;font-size:10px;color:var(--gold2);letter-spacing:1.5px;text-transform:uppercase;padding-top:10px}
+.cdeckhint{font-size:11px;color:var(--muted);text-align:center;margin-top:-2px}
+.smock{max-width:300px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(201,162,39,.20),transparent),linear-gradient(180deg,var(--navy3),var(--navy));border:1px solid var(--gold);border-radius:16px;padding:24px;display:flex;flex-direction:column;text-align:center;box-shadow:0 10px 26px -14px #000}
+.smock .sbrand{font-size:11px;letter-spacing:4px;color:var(--gold);font-weight:800}
+.smock .shead{margin:auto 0;font-size:22px;font-weight:900;color:#fff;line-height:1.28}
+.smock .ssub{font-size:13px;color:var(--gold2);margin-top:12px;font-weight:700}
+.smock .sfoot{font-size:10.5px;color:var(--muted);margin-top:16px;letter-spacing:1px}
 .mixrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .mixc{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:16px;border-top:3px solid var(--c)}
 .mixc .n{font-size:26px;font-weight:800;color:var(--gold2)}.mixc .l{font-size:12px;color:var(--muted)}
@@ -296,11 +312,28 @@ document.getElementById('activitySchedule').innerHTML='<tr><th>Month</th><th>Fla
 /* competitors */
 document.getElementById('compGrid').innerHTML=DATA.competitors.map(c=>`
 <div class="compcard"><div class="h" ${ce()}>${c.h}</div><div class="seg">${c.seg}</div><div class="take" ${ce()}>${c.take}</div>
-${c.reels.map(r=>`<a class="reflink" href="${r[1]}" target="_blank" rel="noopener"><span class="ti">▶ ${esc(r[0])}</span><span class="cp">Copy this: ${esc(r[2])}</span></a>`).join('')}</div>`).join('');
+${c.reels.map(r=>`<div class="refnote">🎬 <b>${esc(r[0])}</b> — Copy this: ${esc(r[2])}</div>${igFrame(r[1])}`).join('')}</div>`).join('');
 /* posts */
+/* ---- inline media helpers (embed videos / render carousels & statics in-dashboard, no redirect) ---- */
+function igCode(u){const m=(u||'').match(/\/(reel|p|tv)\/([^/?#]+)/);return m?m[2]:''}
+function igEmbed(u){const c=igCode(u);return c?('https://www.instagram.com/reel/'+c+'/embed'):u}
+function igFrame(u){return `<div class="igwrap"><iframe class="igframe" src="${igEmbed(u)}" loading="lazy" scrolling="no" allowtransparency="true" allowfullscreen></iframe></div>`}
+function refNote(p){return p.ref.length?`<div class="refnote">🎬 Style reference: <b>${esc(p.ref[0][0])}</b> — ${esc(p.ref[0][2])}</div>`:''}
+function carouselDeck(p){
+ const slides=p.detail.map((s,i)=>{const k=s.indexOf(' — ');const lbl=k>0?s.slice(0,k):('Slide '+(i+1));const txt=k>0?s.slice(k+3):s;
+  return `<div class="cslide"><span class="cn">${esc(lbl)}</span><div class="ctxt" ${ce()}>${esc(txt)}</div><div class="cft">PANTHEON · @pantheon_development</div></div>`;}).join('');
+ return `<div class="cdeck">${slides}</div><div class="cdeckhint">← swipe the ${p.detail.length}-slide carousel →</div>`;}
+function staticMock(p){
+ return `<div class="smock"><div class="sbrand">PANTHEON</div><div class="shead" ${ce()}>${esc(p.hook||p.title)}</div><div class="ssub" ${ce()}>${esc(p.cta)}</div><div class="sfoot">@pantheon_development</div></div>`;}
+function mediaBlock(p){
+ if(p.ftype==='Reel'){
+   return `<div class="media">${p.ref.length?igFrame(p.ref[0][1]):''}${refNote(p)}</div>`;}
+ if(p.ftype==='Carousel'){
+   return `<div class="media">${carouselDeck(p)}${p.ref.length?`<details><summary>🎬 Style reference (video)</summary><div class="dbody">${igFrame(p.ref[0][1])}${refNote(p)}</div></details>`:''}</div>`;}
+ return `<div class="media">${staticMock(p)}${p.ref.length?`<details><summary>🎬 Style reference (video)</summary><div class="dbody">${igFrame(p.ref[0][1])}${refNote(p)}</div></details>`:''}</div>`;}
 function briefBlock(p){
  if(p.ftype==='Carousel'){
-   return `<details open><summary>🗂 Slide-by-slide (${p.detail.length} slides)</summary>
+   return `<details><summary>🗂 Slide copy (${p.detail.length} slides)</summary>
    <ul class="slides">${p.detail.map(s=>`<li ${ce()}>${esc(s)}</li>`).join('')}</ul></details>`;}
  if(p.ftype==='Static'){
    return `<details><summary>🎨 Design layout</summary><div class="dbody" ${ce()}>${esc(p.detail)}</div></details>`;}
@@ -309,20 +342,18 @@ function postCard(p){const pl=PILLAR_BY[p.pillar];
  const badges=[`<span class="pill ft ${p.ftype.toLowerCase()}">${p.ftype}</span>`];
  if(p.peak)badges.push('<span class="pill peak">⭐ Peak</span>');
  if(p.boost)badges.push('<span class="pill boost">Boost</span>');
- const refs=p.ref.length?`<details><summary>▶ Reference — how it should look</summary><div class="dbody">${
-   p.ref.map(r=>`<a class="reflink" href="${r[1]}" target="_blank" rel="noopener"><span class="ti">▶ ${esc(r[0])}</span><span class="cp">Copy this: ${esc(r[2])}</span></a>`).join('')}</div></details>`:'';
  return `<div class="post" data-pillar="${p.pillar}" data-ft="${p.ftype}" data-peak="${p.peak}" data-boost="${p.boost}" style="--c:${pl.color}">
  <div class="top"><div class="date"><b>${p.date}</b> · ${p.day} ${p.time} · ${pl.icon} ${pl.name}</div><div class="badges">${badges.join('')}</div></div>
  <h3 ${ce()}>${esc(p.title)}</h3>
  <div class="hook" ${ce()}>“${esc(p.hook)}”</div>
+ ${mediaBlock(p)}
  <div class="cap" ${ce()}>${esc(p.caption)}</div>
  <div class="tags" ${ce()}>${esc(p.tags)}</div>
  <div class="cta">CTA: <b>${esc(p.cta)}</b></div>
  ${p.collab?`<div class="collabtag">🤝 ${esc(p.collab)}</div>`:''}
  <details><summary>🎨 Creative direction</summary><div class="dbody" ${ce()}>${esc(p.direction)}</div></details>
  ${briefBlock(p)}
- <div class="storyline" ${ce()}>📱 Story tie-in: ${esc(p.story)}</div>
- ${refs}</div>`;}
+ <div class="storyline" ${ce()}>📱 Story tie-in: ${esc(p.story)}</div></div>`;}
 function renderPosts(f){const g=document.getElementById('postGrid');let ps=DATA.posts.slice();
  if(f&&f!=='all'){
   if(f==='peak')ps=ps.filter(p=>p.peak);
