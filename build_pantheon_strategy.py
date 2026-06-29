@@ -400,8 +400,8 @@ a{text-decoration:none}
 .reflink{display:block;background:var(--gold-bg);border:1px solid var(--gold);border-radius:9px;padding:10px 12px;font-size:12.5px;margin-bottom:8px}
 .reflink .ti{color:#8a6418;font-weight:800}.reflink .cp{display:block;color:var(--gray);font-size:11.5px;margin-top:3px}
 .media{margin:12px 0}
-.igwrap{max-width:340px;margin:8px auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
-.igframe{width:100%;height:560px;border:0;display:block;background:#fff}
+.igwrap{max-width:300px;margin:8px auto;background:#111;border-radius:18px;overflow:hidden;border:1px solid var(--border);padding:6px;box-shadow:var(--shadow-lg)}
+.igframe{width:100%;height:500px;border:0;display:block;background:#fff;border-radius:12px}
 .refnote{font-size:11.5px;color:var(--gray);margin-top:8px;line-height:1.4}.refnote b{color:#8a6418}
 .cdeck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
 .cslide{scroll-snap-align:center;flex:0 0 78%;max-width:290px;min-height:360px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:16px;padding:20px;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
@@ -438,8 +438,8 @@ a{text-decoration:none}
 .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
 .fbtn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 13px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:700}
 .fbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.posts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.post{background:#fff;border:1px solid var(--border);border-top:4px solid var(--c);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.posts{column-count:2;column-gap:16px}
+.post{background:#fff;border:1px solid var(--border);border-top:4px solid var(--c);border-radius:12px;padding:18px;box-shadow:var(--shadow);break-inside:avoid;-webkit-column-break-inside:avoid;width:100%;display:inline-block;margin:0 0 16px}
 .post .top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
 .post .date{font-size:11.5px;color:var(--gray)}.post .date b{color:var(--navy)}
 .badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
@@ -479,7 +479,8 @@ details[open] summary::before{content:'▾ '}
 .note{background:rgba(200,146,42,.12);border:1px solid var(--gold);border-radius:9px;padding:11px 13px;font-size:12px;margin-top:12px;color:#fff}
 .editing [contenteditable]{outline:1px dashed var(--gold);outline-offset:2px}
 @media(max-width:980px){.sb{width:100%;height:auto;position:relative}.main{margin-left:0}
-.agrid,.pfgrid,.kgrid,.ecogrid,.campgrid,.volgrid,.posts,.actgrid,.cgrid,.growthrow,.checklist{grid-template-columns:1fr}
+.agrid,.pfgrid,.kgrid,.ecogrid,.campgrid,.volgrid,.actgrid,.cgrid,.growthrow,.checklist{grid-template-columns:1fr}
+.posts{column-count:1}
 .calgrid{gap:2px}.calchip{white-space:normal}.calcell{min-height:auto}}
 """
 
@@ -526,7 +527,7 @@ function card(p){const c=D.pcolor[p.pillar];const badges=[`<span class="pill ft"
  <div class="top"><div class="date"><b>${p.date}</b> · ${p.day} ${p.time} · ${D.pname[p.pillar]}</div><div class="badges">${badges.join('')}</div></div>
  <h3 ${ce()}>${esc(p.title)}</h3><div class="hook" ${ce()}>“${esc(p.hook)}”</div>
  ${mediaBlock(p)}
- <div class="cap" ${ce()}>${esc(p.caption)}</div><div class="tags" ${ce()}>${esc(p.tags)}</div>
+ <div class="cap" ${ce()}>${esc(p.caption).replace(/\\n/g,'\n')}</div><div class="tags" ${ce()}>${esc(p.tags)}</div>
  <div class="cta">CTA: <b>${esc(p.cta)}</b></div>${p.collab?`<div class="collabtag">🤝 ${esc(p.collab)}</div>`:''}
  <details><summary>🎨 Creative direction</summary><div class="dbody" ${ce()}>${esc(p.direction)}</div></details>
  ${brief(p)}<div class="storyline" ${ce()}>📱 Story tie-in: ${esc(p.story)}</div></div>`}
