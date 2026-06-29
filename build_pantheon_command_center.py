@@ -864,16 +864,26 @@ td.amt{color:var(--gold2);font-weight:700;white-space:nowrap}
 .igframe{width:100%;height:560px;border:0;display:block;background:#fff}
 .refnote{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4}.refnote b{color:var(--gold2)}
 .cdeck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
-.cslide{scroll-snap-align:center;flex:0 0 80%;max-width:300px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy3),var(--navy));border:1px solid var(--gold);border-radius:14px;padding:18px;display:flex;flex-direction:column;box-shadow:0 8px 22px -12px #000}
-.cslide .cn{font-size:11px;font-weight:800;color:#1a1404;background:var(--gold2);align-self:flex-start;padding:3px 10px;border-radius:10px;letter-spacing:.5px}
-.cslide .ctxt{margin-top:12px;font-size:14.5px;color:var(--text);font-weight:600;line-height:1.45}
-.cslide .cft{margin-top:auto;font-size:10px;color:var(--gold2);letter-spacing:1.5px;text-transform:uppercase;padding-top:10px}
-.cdeckhint{font-size:11px;color:var(--muted);text-align:center;margin-top:-2px}
-.smock{max-width:300px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(201,162,39,.20),transparent),linear-gradient(180deg,var(--navy3),var(--navy));border:1px solid var(--gold);border-radius:16px;padding:24px;display:flex;flex-direction:column;text-align:center;box-shadow:0 10px 26px -14px #000}
-.smock .sbrand{font-size:11px;letter-spacing:4px;color:var(--gold);font-weight:800}
-.smock .shead{margin:auto 0;font-size:22px;font-weight:900;color:#fff;line-height:1.28}
-.smock .ssub{font-size:13px;color:var(--gold2);margin-top:12px;font-weight:700}
-.smock .sfoot{font-size:10.5px;color:var(--muted);margin-top:16px;letter-spacing:1px}
+.cslide{scroll-snap-align:center;flex:0 0 78%;max-width:290px;min-height:360px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy3),var(--navy));border:1px solid rgba(201,162,39,.5);border-radius:16px;padding:20px;display:flex;flex-direction:column;box-shadow:0 10px 26px -14px #000}
+.cslide .cn{font-size:10.5px;font-weight:800;color:#1a1404;background:linear-gradient(135deg,var(--gold2),var(--gold));align-self:flex-start;padding:4px 11px;border-radius:20px;letter-spacing:.5px}
+.cslide .ctxt{margin-top:14px;font-size:15px;color:var(--text);font-weight:600;line-height:1.5}
+.cslide .cft{margin-top:auto;font-size:9.5px;color:var(--gold2);letter-spacing:2px;text-transform:uppercase;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+.cdeckhint{font-size:11px;color:var(--muted);text-align:center;margin-top:-2px;letter-spacing:.3px}
+.smock{max-width:290px;min-height:380px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(201,162,39,.22),transparent),linear-gradient(180deg,var(--navy3),var(--navy));border:1px solid rgba(201,162,39,.5);border-radius:18px;padding:26px;display:flex;flex-direction:column;text-align:center;box-shadow:0 12px 30px -16px #000}
+.smock .sbrand{font-size:11px;letter-spacing:5px;color:var(--gold);font-weight:800}
+.smock .shead{margin:auto 0;font-size:23px;font-weight:900;color:#fff;line-height:1.3}
+.smock .ssub{font-size:13px;color:var(--gold2);margin-top:14px;font-weight:700}
+.smock .sfoot{font-size:10px;color:var(--muted);margin-top:18px;letter-spacing:2px}
+/* account snapshot (real @pantheon_development baseline) */
+.snapshot{max-width:680px;margin:26px auto 0;background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--border);border-radius:16px;padding:18px 22px;text-align:left}
+.snap-id{display:flex;align-items:center;gap:9px;font-weight:800;color:#fff;font-size:15px}
+.snap-dot{width:9px;height:9px;border-radius:50%;background:#3FA796;box-shadow:0 0 0 4px rgba(63,167,150,.18)}
+.snap-verified{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.snap-bio{color:var(--gold2);font-size:13px;font-style:italic;margin:8px 0 14px}
+.snap-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.snap-stat{background:var(--navy);border:1px solid var(--border);border-radius:11px;padding:12px;text-align:center}
+.snap-stat b{display:block;font-size:21px;font-weight:900;color:var(--gold2)}
+.snap-stat span{font-size:11px;color:var(--muted)}.snap-stat i{font-style:normal;opacity:.7}
 .mixrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .mixc{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:16px;border-top:3px solid var(--c)}
 .mixc .n{font-size:26px;font-weight:800;color:var(--gold2)}.mixc .l{font-size:12px;color:var(--muted)}
@@ -943,11 +953,21 @@ footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
 <span class="tag">Q3 2026 · Jul – Sep · AI-Powered Growth Plan</span>
 <h1>From <span class="grad">40K to 100K</span> in 90 days.</h1>
 <p class="sub" style="margin:0 auto">One command center — live dashboard, growth simulator, the full content engine (Reels, carousels slide-by-slide, statics & a Stories playbook), engagement activities, competitor battlecards and the Meta algorithm playbook. Built to be edited and shared with your team.</p>
+<div class="snapshot">
+ <div class="snap-id"><span class="snap-dot"></span>@pantheon_development<span class="snap-verified">Live account baseline · Jun 2026</span></div>
+ <div class="snap-bio">“Designing functional luxury homes that offer belonging and community.”</div>
+ <div class="snap-stats">
+  <div class="snap-stat"><b>40K</b><span>Followers</span></div>
+  <div class="snap-stat"><b>388</b><span>Posts</span></div>
+  <div class="snap-stat"><b>~0.4%</b><span>Engagement now <i>(est.)</i></span></div>
+  <div class="snap-stat"><b>5</b><span>Live projects</span></div>
+ </div>
+</div>
 <div class="kpis">
 <div class="kpi"><div class="n" data-count="40000">0</div><div class="l">Followers today</div></div>
 <div class="kpi"><div class="n" data-count="100000">0</div><div class="l">90-day target</div></div>
-<div class="kpi"><div class="n" data-count="28">0</div><div class="l">Posts / month</div></div>
-<div class="kpi"><div class="n">2.0%+</div><div class="l">Target ER (from 0.38%)</div></div>
+<div class="kpi"><div class="n" data-count="388">0</div><div class="l">Posts published to date</div></div>
+<div class="kpi"><div class="n">2.0%+</div><div class="l">Target ER · ~0.4% now (est.)</div></div>
 </div></div></header>
 
 <section id="dash"><div class="wrap">

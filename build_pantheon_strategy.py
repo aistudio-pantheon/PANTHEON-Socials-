@@ -162,10 +162,19 @@ def hero():
       '<p class="hero-desc">A complete marketing strategy, not just a content calendar. It answers <b>why</b> we post, <b>who</b> we speak to, what <b>business result</b> each pillar drives, and how we <b>convert</b> viewers into enquiries — then hands the team a day-by-day execution playbook with real creative references.</p>'
       '<div class="hero-pos">Positioning: <b>Building Tomorrow\'s Lifestyle Through Design, Delivery &amp; Trust.</b></div>'
       '<div class="ct-row">'+chips+'</div>'
+      '<div class="snapshot">'
+      '<div class="snap-id"><span class="snap-dot"></span>@pantheon_development<span class="snap-verified">Live account baseline · Jun 2026</span></div>'
+      '<div class="snap-bio">“Designing functional luxury homes that offer belonging and community.”</div>'
+      '<div class="snap-stats">'
+      '<div class="snap-stat"><b>40K</b><span>Followers</span></div>'
+      '<div class="snap-stat"><b>388</b><span>Posts</span></div>'
+      '<div class="snap-stat"><b>~0.4%</b><span>Engagement now <i>(est.)</i></span></div>'
+      '<div class="snap-stat"><b>5</b><span>Live projects</span></div>'
+      '</div></div>'
       '<div class="hero-stats">'
       '<div class="hs"><div class="v">40K → 100K</div><div class="l">Follower goal · 90 days</div></div>'
-      '<div class="hs"><div class="v">6</div><div class="l">Content pillars</div></div>'
-      '<div class="hs"><div class="v">4</div><div class="l">Audience segments</div></div>'
+      '<div class="hs"><div class="v">388</div><div class="l">Posts published to date</div></div>'
+      '<div class="hs"><div class="v">66</div><div class="l">Briefed posts this quarter</div></div>'
       '<div class="hs"><div class="v">300+</div><div class="l">Qualified leads / mo target</div></div>'
       '</div></div></div>')
 
@@ -395,16 +404,27 @@ a{text-decoration:none}
 .igframe{width:100%;height:560px;border:0;display:block;background:#fff}
 .refnote{font-size:11.5px;color:var(--gray);margin-top:8px;line-height:1.4}.refnote b{color:#8a6418}
 .cdeck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
-.cslide{scroll-snap-align:center;flex:0 0 80%;max-width:300px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:14px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
-.cslide .cn{font-size:11px;font-weight:800;color:var(--ink);background:var(--gold);align-self:flex-start;padding:3px 10px;border-radius:10px;letter-spacing:.5px}
-.cslide .ctxt{margin-top:12px;font-size:14.5px;color:#fff;font-weight:600;line-height:1.45}
-.cslide .cft{margin-top:auto;font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;padding-top:10px}
-.cdeckhint{font-size:11px;color:var(--gray);text-align:center;margin-top:-2px}
-.smock{max-width:300px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(200,146,42,.22),transparent),linear-gradient(180deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:16px;padding:24px;display:flex;flex-direction:column;text-align:center;box-shadow:var(--shadow-lg)}
-.smock .sbrand{font-size:11px;letter-spacing:4px;color:var(--gold);font-weight:800}
-.smock .shead{margin:auto 0;font-size:22px;font-weight:900;color:#fff;line-height:1.28}
-.smock .ssub{font-size:13px;color:var(--gold);margin-top:12px;font-weight:700}
-.smock .sfoot{font-size:10.5px;color:rgba(255,255,255,.6);margin-top:16px;letter-spacing:1px}
+.cslide{scroll-snap-align:center;flex:0 0 78%;max-width:290px;min-height:360px;aspect-ratio:4/5;background:linear-gradient(160deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:16px;padding:20px;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.cslide .cn{font-size:10.5px;font-weight:800;color:var(--ink);background:linear-gradient(135deg,#e7c75a,var(--gold));align-self:flex-start;padding:4px 11px;border-radius:20px;letter-spacing:.5px}
+.cslide .ctxt{margin-top:14px;font-size:15px;color:#fff;font-weight:600;line-height:1.5}
+.cslide .cft{margin-top:auto;font-size:9.5px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.cdeckhint{font-size:11px;color:var(--gray);text-align:center;margin-top:-2px;letter-spacing:.3px}
+.smock{max-width:290px;min-height:380px;aspect-ratio:4/5;margin:8px auto;background:radial-gradient(130% 80% at 50% 0%,rgba(200,146,42,.24),transparent),linear-gradient(180deg,var(--navy),#08306b);border:1px solid var(--gold);border-radius:18px;padding:26px;display:flex;flex-direction:column;text-align:center;box-shadow:var(--shadow-lg)}
+.smock .sbrand{font-size:11px;letter-spacing:5px;color:var(--gold);font-weight:800}
+.smock .shead{margin:auto 0;font-size:23px;font-weight:900;color:#fff;line-height:1.3}
+.smock .ssub{font-size:13px;color:var(--gold);margin-top:14px;font-weight:700}
+.smock .sfoot{font-size:10px;color:rgba(255,255,255,.6);margin-top:18px;letter-spacing:2px}
+/* account snapshot (real @pantheon_development baseline) */
+.snapshot{max-width:780px;background:rgba(255,255,255,.06);border:1px solid var(--gold);border-radius:14px;padding:16px 20px;margin-bottom:16px}
+.snap-id{display:flex;align-items:center;gap:9px;font-weight:800;color:#fff;font-size:15px}
+.snap-dot{width:9px;height:9px;border-radius:50%;background:#5fd0bd;box-shadow:0 0 0 4px rgba(95,208,189,.2)}
+.snap-verified{margin-left:auto;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.3px;text-transform:uppercase}
+.snap-bio{color:var(--gold);font-size:13px;font-style:italic;margin:8px 0 14px}
+.snap-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.snap-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:11px;padding:11px;text-align:center}
+.snap-stat b{display:block;font-size:21px;font-weight:900;color:#fff}
+.snap-stat span{font-size:11px;color:rgba(255,255,255,.6)}.snap-stat i{font-style:normal;opacity:.7}
+@media(max-width:980px){.snap-stats{grid-template-columns:1fr 1fr}}
 .cprofile{font-size:12px;font-weight:700;color:var(--blue)}
 /* calendar */
 .calmonth{margin-bottom:24px}.calmonth h4{color:var(--navy);margin-bottom:8px;font-size:15px}
