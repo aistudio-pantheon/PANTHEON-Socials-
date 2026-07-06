@@ -2,364 +2,556 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pantheon Marcom A26 — Operations Dashboard · Jul 6</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pantheon Marcom A26 — Operations Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e1117;--panel:#151a23;--panel2:#1a2029;--line:#242c39;--ink:#e8ecf3;--ink2:#9aa4b5;
---ink3:#5f6a7d;--gold:#d4af37;--green:#00c875;--amber:#fdab3d;--blank:#3a4150;--r:12px}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;padding:28px 32px 60px}
-a{color:inherit;text-decoration:none}a:hover{color:var(--gold)}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-h1{font-size:22px;font-weight:700;letter-spacing:.2px}
-.sub{color:var(--ink2);margin-top:4px;font-size:13px}
-.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.4);
-color:var(--green);font-weight:600;font-size:12px;padding:6px 12px;border-radius:999px;white-space:nowrap}
-.badge i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:28px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:3px}
-.klabel{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);font-weight:600}
-.kval{font-size:26px;font-weight:700;letter-spacing:-.5px}
-.done-ink{color:var(--green)}.pend-ink{color:var(--amber)}.blank-ink{color:var(--ink2)}
-.delta{font-size:11px;font-weight:600}.delta.up{color:var(--green)}.delta.down{color:#e8736c}.delta.flat{color:var(--ink3)}
-.kbar{height:6px;background:var(--blank);border-radius:4px;overflow:hidden;margin-top:6px}
-.kbar span{display:block;height:100%;background:var(--green);border-radius:4px}
-.unit{margin-bottom:30px}
-.unit-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:14px}
-h2{font-size:15px;font-weight:700;color:var(--gold)}
-.unit-meta{font-size:12px;color:var(--ink3)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.card header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.bname{display:flex;gap:9px;min-width:0}.bemoji{font-size:18px;line-height:1.3}
-.bname a{font-weight:600;font-size:13.5px;display:block;line-height:1.35}
-.owner{font-size:11px;color:var(--ink3);margin-top:2px}
-.bstat{text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
-.pct{font-size:17px;font-weight:700}.count{font-size:11px;color:var(--ink2)}
-.subpill{font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin-top:3px}
-.bar{display:flex;gap:2px;height:8px;border-radius:5px;overflow:hidden;background:var(--blank)}
-.bar.empty{opacity:.4}
-.seg{display:block;height:100%;min-width:3px}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink2);background:var(--panel2);
-border:1px solid var(--line);border-radius:999px;padding:2px 8px}
-.chip i{width:7px;height:7px;border-radius:50%}.chip b{color:var(--ink);font-weight:600}
-.groups{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:9px}
-.grow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(70px,1fr) 44px;gap:9px;align-items:center}
-.grow .bar{height:6px}
-.gname{font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gcount{font-size:11px;color:var(--ink3);text-align:right;font-variant-numeric:tabular-nums}
-.empty-note{color:var(--ink3);font-size:12px;font-style:italic;padding:2px 0 4px}
-footer{margin-top:36px;color:var(--ink3);font-size:11.5px;border-top:1px solid var(--line);padding-top:14px;line-height:1.7}
-@media(max-width:640px){body{padding:18px 14px 40px}.grid{grid-template-columns:1fr}}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#0f1117;color:#e8eaed;min-height:100vh;}
+.top-bar{background:linear-gradient(135deg,#1a1d2e 0%,#16213e 50%,#0f3460 100%);padding:24px 32px;border-bottom:1px solid #2a2d3e;display:flex;align-items:center;justify-content:space-between;}
+.top-bar h1{font-size:22px;font-weight:800;}
+.top-bar .sub{font-size:13px;color:#94a3b8;margin-top:4px;}
+.badge{background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;}
+.dl-btn{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:#34d399;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:10px;font-family:'Inter',sans-serif;}
+.dl-btn:disabled{opacity:0.6;cursor:wait;}
+.main{padding:28px 32px;}
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px;}
+.card{background:linear-gradient(135deg,#1e2132,#252840);border:1px solid #2e3150;border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .2s;}
+.card:hover{transform:translateY(-2px);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.card.blue::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+.card.green::before{background:linear-gradient(90deg,#10b981,#34d399);}
+.card.yellow::before{background:linear-gradient(90deg,#f59e0b,#fcd34d);}
+.card.red::before{background:linear-gradient(90deg,#ef4444,#f87171);}
+.card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+.card.teal::before{background:linear-gradient(90deg,#14b8a6,#2dd4bf);}
+.card-icon{font-size:28px;margin-bottom:8px;}
+.card-label{font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+.card-value{font-size:32px;font-weight:800;line-height:1;}
+.card.blue .card-value{color:#60a5fa;}
+.card.green .card-value{color:#34d399;}
+.card.yellow .card-value{color:#fcd34d;}
+.card.red .card-value{color:#f87171;}
+.card.purple .card-value{color:#a78bfa;}
+.card.teal .card-value{color:#2dd4bf;}
+.card-sub{font-size:11px;color:#64748b;margin-top:4px;}
+.top-perf-inline{display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#0f1117;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section{background:#1e2132;border:1px solid #2e3150;border-radius:16px;margin-bottom:24px;overflow:hidden;}
+.section-header{padding:18px 24px;background:linear-gradient(135deg,#252840,#1e2132);border-bottom:1px solid #2e3150;display:flex;align-items:center;gap:10px;}
+.section-header h2{font-size:16px;font-weight:700;color:#e8eaed;}
+.section-header .pill{background:rgba(167,139,250,0.15);color:#a78bfa;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;}
+.unit-band{background:rgba(167,139,250,0.06);padding:10px 24px;color:#a78bfa;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-top:1px solid #2e3150;border-bottom:1px solid #2e3150;}
+.unit-band .folder{margin-right:6px;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#252840;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:12px 16px;text-align:left;border-bottom:1px solid #2e3150;}
+tbody tr{border-bottom:1px solid #1a1d2e;transition:background .15s;}
+tbody tr:hover{background:rgba(167,139,250,0.04);}
+tbody tr:last-child{border-bottom:none;}
+.bar-wrap{background:#2a2d3e;border-radius:4px;height:6px;overflow:hidden;}
+.bar-fill{height:6px;border-radius:4px;}
+.bar-pct{font-size:11px;color:#94a3b8;margin-top:4px;display:block;}
+.chip{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:600;color:#fff;display:inline-block;}
+.chip.excellent{background:#27ae60;}
+.chip.good{background:#2ecc71;}
+.chip.partial{background:#f39c12;}
+.chip.attn{background:#e67e22;}
+.chip.critical{background:#e74c3c;}
+.chip.active{background:#579bfc;}
+.chip.empty{background:#7f8c8d;}
+.chip.purple{background:#a78bfa;color:#0f1117;}
+.chip.red-pill{background:#ef4444;}
+.chip.green-pill{background:#10b981;}
+.chip.blue-pill{background:#3b82f6;}
+.chip.orange-pill{background:#f97316;}
+.chip.gold-pill{background:#fbbf24;color:#0f1117;}
+.center{text-align:center;}
+.bold{font-weight:700;}
+.num-green{color:#34d399;font-weight:700;}
+.num-yellow{color:#fcd34d;font-weight:700;}
+.num-blue{color:#60a5fa;font-weight:700;}
+.footer{text-align:center;padding:20px;color:#4a5568;font-size:12px;border-top:1px solid #2e3150;}
+.live-link{color:#a78bfa;text-decoration:none;border-bottom:1px dotted #a78bfa;}
+.live-link:hover{color:#c4b5fd;}
+.group-pill{display:inline-block;background:rgba(96,165,250,0.12);color:#93c5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;margin:2px;}
+.group-pill b{color:#e8eaed;}
+.group-pill.zero{background:rgba(148,163,184,0.1);color:#94a3b8;}
+.av{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;border-radius:50%;color:#fff;font-weight:800;font-size:11px;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);}
+.av.lg{width:64px;height:64px;font-size:20px;}
+.av.md{width:44px;height:44px;font-size:15px;}
+.av.sm{width:26px;height:26px;font-size:10px;}
+.av.magalie{background:linear-gradient(135deg,#ec4899,#be185d);}
+.av.lipin{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.av.nagi{background:linear-gradient(135deg,#14b8a6,#0f766e);}
+.av.fayiz{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.av.elias{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.av.rasheed{background:linear-gradient(135deg,#10b981,#047857);}
+.av.anees{background:linear-gradient(135deg,#dc2626,#991b1b);}
+.av.sehar{background:linear-gradient(135deg,#f97316,#c2410c);}
+.av.amir{background:linear-gradient(135deg,#06b6d4,#0e7490);}
+.av.laxman{background:linear-gradient(135deg,#6366f1,#4338ca);}
+.av.akhil{background:linear-gradient(135deg,#64748b,#334155);}
+.av.rohit{background:linear-gradient(135deg,#a16207,#713f12);}
+.av.lara{background:linear-gradient(135deg,#84cc16,#4d7c0f);}
+.av.abhishek{background:linear-gradient(135deg,#0ea5e9,#0369a1);}
+.av.otc{background:linear-gradient(135deg,#facc15,#a16207);color:#0a0c14;}
+.av.chairman{background:linear-gradient(135deg,#fbbf24,#92400e);color:#0a0c14;}
+.av.jishnu{background:linear-gradient(135deg,#22d3ee,#0891b2);}
+.av.rinas{background:linear-gradient(135deg,#22c55e,#15803d);}
+.av-stack{display:inline-flex;align-items:center;}
+.av-stack .av{margin-left:-10px;}
+.av-stack .av:first-child{margin-left:0;}
+.person{display:inline-flex;align-items:center;gap:8px;}
+.person .name{font-weight:600;font-size:13px;color:#e8eaed;}
+.section{background:#1e2132;border:1px solid #2e3150;border-radius:18px;margin-bottom:24px;overflow:hidden;}
+.section-header{padding:20px 26px;background:linear-gradient(135deg,#252840,#1e2132);border-bottom:1px solid #2e3150;display:flex;align-items:center;gap:12px;}
+.section-header h2{font-size:17px;font-weight:800;color:#e8eaed;}
+.section-header .pill{background:rgba(167,139,250,0.15);color:#a78bfa;border-radius:12px;padding:3px 12px;font-size:12px;font-weight:600;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#252840;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:14px 18px;text-align:left;border-bottom:1px solid #2e3150;}
+tbody tr{border-bottom:1px solid #1a1d2e;transition:background .15s;}
+tbody tr:hover{background:rgba(167,139,250,0.05);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:14px 18px;font-size:13px;}
+.bar-wrap{background:#2a2d3e;border-radius:6px;height:8px;overflow:hidden;position:relative;}
+.bar-fill{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--bc-start,#27ae60),var(--bc-end,#10b981));}
+.bar-pct{font-size:11px;color:#94a3b8;margin-top:4px;display:block;}
+.chip{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.3px;}
+.chip.excellent{background:linear-gradient(135deg,#10b981,#047857);}
+.chip.good{background:linear-gradient(135deg,#2ecc71,#1e8449);}
+.chip.partial{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.chip.attn{background:linear-gradient(135deg,#f97316,#c2410c);}
+.chip.critical{background:linear-gradient(135deg,#ef4444,#991b1b);}
+.chip.active{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.chip.empty{background:linear-gradient(135deg,#64748b,#334155);}
+.chip.crown{background:linear-gradient(135deg,#a78bfa,#7c3aed);}
 </style>
 </head>
 <body>
-  <div class="top">
-    <div>
-      <h1>🏛️ Pantheon Marcom Workplace A26 — Operations Dashboard</h1>
-      <div class="sub"><a href="https://pered-squad.monday.com/workspaces/2928343" target="_blank" rel="noopener">https://pered-squad.monday.com/workspaces/2928343</a> · Brand &amp; Content · Engagement &amp; Partnerships · Digital &amp; Analytics · KK Personal Brand · Governance · Make Noise</div>
-    </div>
-    <span class="badge"><i></i>🟦 LIVE — all 28 boards · 6 July 2026</span>
+<div class="top-bar">
+  <div>
+    <h1>⚡ Pantheon Marcom A26 — Operations Dashboard</h1>
+    <div class="sub">Workspace: Pantheon Marcom Workplace A26 · 28 boards · 6 Units · 1,581 items + 47 subitems &nbsp;|&nbsp; live monday.com pull · July 6, 2026</div>
   </div>
-  
-    <div class="kpis">
-      <div class="kpi"><span class="klabel">Boards</span><span class="kval">28</span><span class="delta flat">6 folders</span></div>
-      <div class="kpi"><span class="klabel">Total items</span><span class="kval">1,581</span><span class="delta up">+112 vs 29 Jun</span></div>
-      <div class="kpi"><span class="klabel">Done</span><span class="kval done-ink">1,472</span><span class="delta up">+89 vs 29 Jun</span></div>
-      <div class="kpi"><span class="klabel">Pending</span><span class="kval pend-ink">87</span><span class="delta down">+23 vs 29 Jun</span></div>
-      <div class="kpi"><span class="klabel">No status</span><span class="kval blank-ink">22</span><span class="delta flat">— vs 29 Jun</span></div>
-      <div class="kpi"><span class="klabel">Completion</span><span class="kval">93.1%</span>
-        <div class="kbar"><span style="width:93.1%"></span></div></div>
-      <div class="kpi"><span class="klabel">Subitems</span><span class="kval">30/47</span><span class="delta flat">done / total</span></div>
-    </div>
-  
-    <section class="unit">
-      <div class="unit-head"><h2>📁 Unit 1 — Brand &amp; Content</h2>
-        <span class="unit-meta">5 boards · 831 items · 91% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📱</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783015" target="_blank" rel="noopener">Social Media Content Calendar</a>
-            <div class="owner">Owner: Rashid · Support: Elias</div></div></div>
-          <div class="bstat"><span class="pct">97%</span><span class="count">295/305</span><span class="subpill" title="Subitems">↳ 0/4 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 295" style="width:96.72%;background:#00c875"></span><span class="seg" title="Planned: 8" style="width:2.62%;background:#c4c4c4"></span><span class="seg" title="Working on it: 1" style="width:0.33%;background:#fdab3d"></span><span class="seg" title="Pending Approval: 1" style="width:0.33%;background:#007eb5"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>295</b></span><span class="chip"><i style="background:#c4c4c4"></i>Planned <b>8</b></span><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>1</b></span><span class="chip"><i style="background:#007eb5"></i>Pending Approval <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="PANTHEON June Calendar">PANTHEON June Calendar</span><div class="bar"><span class="seg" title="Done: 61" style="width:87.14%;background:#00c875"></span><span class="seg" title="Planned: 8" style="width:11.43%;background:#c4c4c4"></span><span class="seg" title="Working on it: 1" style="width:1.43%;background:#fdab3d"></span></div><span class="gcount">61/70</span></div><div class="grow"><span class="gname" title="Pantheon Linkedin April">Pantheon Linkedin April</span><div class="bar"><span class="seg" title="Done: 25" style="width:100.00%;background:#00c875"></span></div><span class="gcount">25/25</span></div><div class="grow"><span class="gname" title="Pantheon Instagram April - May">Pantheon Instagram April - May</span><div class="bar"><span class="seg" title="Done: 165" style="width:100.00%;background:#00c875"></span></div><span class="gcount">165/165</span></div><div class="grow"><span class="gname" title="Pantheon General Social">Pantheon General Social</span><div class="bar"><span class="seg" title="Done: 7" style="width:100.00%;background:#00c875"></span></div><span class="gcount">7/7</span></div><div class="grow"><span class="gname" title="Other">Other</span><div class="bar"><span class="seg" title="Done: 2" style="width:66.67%;background:#00c875"></span><span class="seg" title="Pending Approval: 1" style="width:33.33%;background:#007eb5"></span></div><span class="gcount">2/3</span></div><div class="grow"><span class="gname" title="Google Business Profile">Google Business Profile</span><div class="bar"><span class="seg" title="Done: 9" style="width:100.00%;background:#00c875"></span></div><span class="gcount">9/9</span></div><div class="grow"><span class="gname" title="PANTHEON - AI STUDIO">PANTHEON - AI STUDIO</span><div class="bar"><span class="seg" title="Done: 26" style="width:100.00%;background:#00c875"></span></div><span class="gcount">26/26</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🎨</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783014" target="_blank" rel="noopener">Creative Brief &amp; Production Tracker</a>
-            <div class="owner">Owner: Magalie · Support: Elias</div></div></div>
-          <div class="bstat"><span class="pct">98%</span><span class="count">336/342</span><span class="subpill" title="Subitems">↳ 7/16 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 336" style="width:98.25%;background:#00c875"></span><span class="seg" title="Working on it: 2" style="width:0.58%;background:#fdab3d"></span><span class="seg" title="Revision 2: 2" style="width:0.58%;background:#9d50dd"></span><span class="seg" title="On Going: 2" style="width:0.58%;background:#c4c4c4"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>336</b></span><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>2</b></span><span class="chip"><i style="background:#9d50dd"></i>Revision 2 <b>2</b></span><span class="chip"><i style="background:#c4c4c4"></i>On Going <b>2</b></span></div><div class="groups"><div class="grow"><span class="gname" title="All briefs">All briefs</span><div class="bar"><span class="seg" title="Done: 336" style="width:98.25%;background:#00c875"></span><span class="seg" title="Working on it: 2" style="width:0.58%;background:#fdab3d"></span><span class="seg" title="Revision 2: 2" style="width:0.58%;background:#9d50dd"></span><span class="seg" title="On Going: 2" style="width:0.58%;background:#c4c4c4"></span></div><span class="gcount">336/342</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📄</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783017" target="_blank" rel="noopener">Brand Collateral Library</a>
-            <div class="owner">Owner: Magalie · Support: Fayiz / Rinas / Lipin / Jishnu</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">2/2</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 2" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>2</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Collateral">Collateral</span><div class="bar"><span class="seg" title="Done: 2" style="width:100.00%;background:#00c875"></span></div><span class="gcount">2/2</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📰</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783018" target="_blank" rel="noopener">PR &amp; Media Relations</a>
-            <div class="owner">Owner: Elias · Support: Sehar</div></div></div>
-          <div class="bstat"><span class="pct">12%</span><span class="count">7/57</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 7" style="width:12.28%;background:#00c875"></span><span class="seg" title="Confirmed: 25" style="width:43.86%;background:#c4c4c4"></span><span class="seg" title="Not Comming: 11" style="width:19.30%;background:#037f4c"></span><span class="seg" title="Waiting for Confirmation: 9" style="width:15.79%;background:#007eb5"></span><span class="seg" title="Working on it: 3" style="width:5.26%;background:#fdab3d"></span><span class="seg" title="Stuck: 2" style="width:3.51%;background:#df2f4a"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>7</b></span><span class="chip"><i style="background:#c4c4c4"></i>Confirmed <b>25</b></span><span class="chip"><i style="background:#037f4c"></i>Not Comming <b>11</b></span><span class="chip"><i style="background:#007eb5"></i>Waiting for Confirmation <b>9</b></span><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>3</b></span><span class="chip"><i style="background:#df2f4a"></i>Stuck <b>2</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Office Launch — Influencer List">Office Launch — Influencer List</span><div class="bar"><span class="seg" title="Done: 2" style="width:6.45%;background:#00c875"></span><span class="seg" title="Not Comming: 11" style="width:35.48%;background:#037f4c"></span><span class="seg" title="Waiting for Confirmation: 9" style="width:29.03%;background:#007eb5"></span><span class="seg" title="Confirmed: 7" style="width:22.58%;background:#c4c4c4"></span><span class="seg" title="Stuck: 2" style="width:6.45%;background:#df2f4a"></span></div><span class="gcount">2/31</span></div><div class="grow"><span class="gname" title="Office Launch — Media List">Office Launch — Media List</span><div class="bar"><span class="seg" title="Confirmed: 18" style="width:100.00%;background:#c4c4c4"></span></div><span class="gcount">0/18</span></div><div class="grow"><span class="gname" title="New Group">New Group</span><div class="bar"><span class="seg" title="Done: 5" style="width:62.50%;background:#00c875"></span><span class="seg" title="Working on it: 3" style="width:37.50%;background:#fdab3d"></span></div><span class="gcount">5/8</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🎬</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783016" target="_blank" rel="noopener">Video &amp; Photography Production</a>
-            <div class="owner">Owner: Magalie</div></div></div>
-          <div class="bstat"><span class="pct">93%</span><span class="count">116/125</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 116" style="width:92.80%;background:#00c875"></span><span class="seg" title="Revision 1: 2" style="width:1.60%;background:#007eb5"></span><span class="seg" title="Waiting for Approval: 1" style="width:0.80%;background:#579bfc"></span><span class="seg" title="No status: 6" style="width:4.80%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>116</b></span><span class="chip"><i style="background:#007eb5"></i>Revision 1 <b>2</b></span><span class="chip"><i style="background:#579bfc"></i>Waiting for Approval <b>1</b></span><span class="chip"><i style="background:#3a4150"></i>No status <b>6</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Production">Production</span><div class="bar"><span class="seg" title="Done: 116" style="width:92.80%;background:#00c875"></span><span class="seg" title="Revision 1: 2" style="width:1.60%;background:#007eb5"></span><span class="seg" title="Waiting for Approval: 1" style="width:0.80%;background:#579bfc"></span><span class="seg" title="No status: 6" style="width:4.80%;background:#3a4150"></span></div><span class="gcount">116/125</span></div></div>
-      </article></div>
-    </section>
-    <section class="unit">
-      <div class="unit-head"><h2>📁 Unit 2 — Engagement &amp; Partnerships</h2>
-        <span class="unit-meta">5 boards · 380 items · 96% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🤝</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783019" target="_blank" rel="noopener">Broker Activations &amp; Engagement</a>
-            <div class="owner">Owner: Sehar</div></div></div>
-          <div class="bstat"><span class="pct">96%</span><span class="count">24/25</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 24" style="width:96.00%;background:#00c875"></span><span class="seg" title="No status: 1" style="width:4.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>24</b></span><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Brokers Pull Initiatives">Brokers Pull Initiatives</span><div class="bar"><span class="seg" title="Done: 20" style="width:95.24%;background:#00c875"></span><span class="seg" title="No status: 1" style="width:4.76%;background:#3a4150"></span></div><span class="gcount">20/21</span></div><div class="grow"><span class="gname" title="May 2026">May 2026</span><div class="bar"><span class="seg" title="Done: 4" style="width:100.00%;background:#00c875"></span></div><span class="gcount">4/4</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🏘️</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783023" target="_blank" rel="noopener">Community &amp; Stakeholder Outreach</a>
-            <div class="owner">Owner: Laxman · Support: Akhil</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/1</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="General">General</span><div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><span class="gcount">0/1</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📇</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783022" target="_blank" rel="noopener">Vendor &amp; Agency Registry</a>
-            <div class="owner">Owner: Anees · Support: Sehar</div></div></div>
-          <div class="bstat"><span class="pct">95%</span><span class="count">37/39</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 37" style="width:94.87%;background:#00c875"></span><span class="seg" title="Working on it: 2" style="width:5.13%;background:#fdab3d"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>37</b></span><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>2</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Vendors">Vendors</span><div class="bar"><span class="seg" title="Done: 15" style="width:100.00%;background:#00c875"></span></div><span class="gcount">15/15</span></div><div class="grow"><span class="gname" title="Vendor &amp; Purchase Orders Details">Vendor &amp; Purchase Orders Details</span><div class="bar"><span class="seg" title="Done: 22" style="width:91.67%;background:#00c875"></span><span class="seg" title="Working on it: 2" style="width:8.33%;background:#fdab3d"></span></div><span class="gcount">22/24</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🎪</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783021" target="_blank" rel="noopener">Event Activations</a>
-            <div class="owner">Owner: Sehar · Support: Anees</div></div></div>
-          <div class="bstat"><span class="pct">96%</span><span class="count">302/315</span><span class="subpill" title="Subitems">↳ 0/1 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 302" style="width:95.87%;background:#00c875"></span><span class="seg" title="On hold: 7" style="width:2.22%;background:#c4c4c4"></span><span class="seg" title="In Progress: 4" style="width:1.27%;background:#ff6d3b"></span><span class="seg" title="Waiting For Approval: 1" style="width:0.32%;background:#579bfc"></span><span class="seg" title="Priority: 1" style="width:0.32%;background:#9d50dd"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>302</b></span><span class="chip"><i style="background:#c4c4c4"></i>On hold <b>7</b></span><span class="chip"><i style="background:#ff6d3b"></i>In Progress <b>4</b></span><span class="chip"><i style="background:#579bfc"></i>Waiting For Approval <b>1</b></span><span class="chip"><i style="background:#9d50dd"></i>Priority <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Pantheon Event Tasks">Pantheon Event Tasks</span><div class="bar"><span class="seg" title="Done: 123" style="width:92.48%;background:#00c875"></span><span class="seg" title="On hold: 6" style="width:4.51%;background:#c4c4c4"></span><span class="seg" title="In Progress: 2" style="width:1.50%;background:#ff6d3b"></span><span class="seg" title="Waiting For Approval: 1" style="width:0.75%;background:#579bfc"></span><span class="seg" title="Priority: 1" style="width:0.75%;background:#9d50dd"></span></div><span class="gcount">123/133</span></div><div class="grow"><span class="gname" title="General Tasks">General Tasks</span><div class="bar"><span class="seg" title="Done: 55" style="width:94.83%;background:#00c875"></span><span class="seg" title="In Progress: 2" style="width:3.45%;background:#ff6d3b"></span><span class="seg" title="On hold: 1" style="width:1.72%;background:#c4c4c4"></span></div><span class="gcount">55/58</span></div><div class="grow"><span class="gname" title="Event Organization">Event Organization</span><div class="bar"><span class="seg" title="Done: 124" style="width:100.00%;background:#00c875"></span></div><span class="gcount">124/124</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🏛️</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783020" target="_blank" rel="noopener">Institutional &amp; JV Outreach</a>
-            <div class="owner">Owner: Lara / Abhishek / Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article></div>
-    </section>
-    <section class="unit">
-      <div class="unit-head"><h2>📁 Unit 3 — Digital &amp; Analytics</h2>
-        <span class="unit-meta">4 boards · 263 items · 100% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🌐</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783025" target="_blank" rel="noopener">Website &amp; SEO Tracker</a>
-            <div class="owner">Owner: Laxman · Support: Akhil</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">33/33</span><span class="subpill" title="Subitems">↳ 13/13 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 33" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>33</b></span></div><div class="groups"><div class="grow"><span class="gname" title="pantheon.ae">pantheon.ae</span><div class="bar"><span class="seg" title="Done: 11" style="width:100.00%;background:#00c875"></span></div><span class="gcount">11/11</span></div><div class="grow"><span class="gname" title="On-Page SEO">On-Page SEO</span><div class="bar"><span class="seg" title="Done: 14" style="width:100.00%;background:#00c875"></span></div><span class="gcount">14/14</span></div><div class="grow"><span class="gname" title="Off-Page SEO">Off-Page SEO</span><div class="bar"><span class="seg" title="Done: 8" style="width:100.00%;background:#00c875"></span></div><span class="gcount">8/8</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📧</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783026" target="_blank" rel="noopener">CRM, Email &amp; WhatsApp Campaigns</a>
-            <div class="owner">Owner: Laxman · Support: Akhil</div></div></div>
-          <div class="bstat"><span class="pct">98%</span><span class="count">57/58</span><span class="subpill" title="Subitems">↳ 0/1 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Completed: 57" style="width:98.28%;background:#00c875"></span><span class="seg" title="In Progress: 1" style="width:1.72%;background:#ff6d3b"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Completed <b>57</b></span><span class="chip"><i style="background:#ff6d3b"></i>In Progress <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Lead Management (Scrapping / Sorting / Nurturing)">Lead Management (Scrapping / Sorting / Nurturing)</span><div class="bar"><span class="seg" title="Completed: 22" style="width:95.65%;background:#00c875"></span><span class="seg" title="In Progress: 1" style="width:4.35%;background:#ff6d3b"></span></div><span class="gcount">22/23</span></div><div class="grow"><span class="gname" title="WhatsApp Campaign — New Project Offers">WhatsApp Campaign — New Project Offers</span><div class="bar"><span class="seg" title="Completed: 20" style="width:100.00%;background:#00c875"></span></div><span class="gcount">20/20</span></div><div class="grow"><span class="gname" title="Email Campaign — New Project Offers">Email Campaign — New Project Offers</span><div class="bar"><span class="seg" title="Completed: 14" style="width:100.00%;background:#00c875"></span></div><span class="gcount">14/14</span></div><div class="grow"><span class="gname" title="Zoho Forms">Zoho Forms</span><div class="bar"><span class="seg" title="Completed: 1" style="width:100.00%;background:#00c875"></span></div><span class="gcount">1/1</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📈</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783027" target="_blank" rel="noopener">Marketing Dashboards &amp; KPIs</a>
-            <div class="owner">Owner: Rohit · Support: Akhil</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">123/123</span><span class="subpill" title="Subitems">↳ 0/1 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Completed: 123" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Completed <b>123</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Artist/Event Intelligence Dashboard (AI Tool)">Artist/Event Intelligence Dashboard (AI Tool)</span><div class="bar"><span class="seg" title="Completed: 47" style="width:100.00%;background:#00c875"></span></div><span class="gcount">47/47</span></div><div class="grow"><span class="gname" title="PACS (AI Content Studio)">PACS (AI Content Studio)</span><div class="bar"><span class="seg" title="Completed: 44" style="width:100.00%;background:#00c875"></span></div><span class="gcount">44/44</span></div><div class="grow"><span class="gname" title="Data Research AI Tool">Data Research AI Tool</span><div class="bar"><span class="seg" title="Completed: 14" style="width:100.00%;background:#00c875"></span></div><span class="gcount">14/14</span></div><div class="grow"><span class="gname" title="Founder/Brand Competitor Intelligence (AI Tool)">Founder/Brand Competitor Intelligence (AI Tool)</span><div class="bar"><span class="seg" title="Completed: 11" style="width:100.00%;background:#00c875"></span></div><span class="gcount">11/11</span></div><div class="grow"><span class="gname" title="Data Scrapping Dashboard (AI Tool)">Data Scrapping Dashboard (AI Tool)</span><div class="bar"><span class="seg" title="Completed: 4" style="width:100.00%;background:#00c875"></span></div><span class="gcount">4/4</span></div><div class="grow"><span class="gname" title="Lead Reports / Analytics">Lead Reports / Analytics</span><div class="bar"><span class="seg" title="Completed: 3" style="width:100.00%;background:#00c875"></span></div><span class="gcount">3/3</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📊</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783024" target="_blank" rel="noopener">Performance Marketing &amp; Paid Media</a>
-            <div class="owner">Owner: Laxman · Support: Akhil</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">49/49</span><span class="subpill" title="Subitems">↳ 10/10 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 49" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>49</b></span></div><div class="groups"><div class="grow"><span class="gname" title="META Ads">META Ads</span><div class="bar"><span class="seg" title="Done: 36" style="width:100.00%;background:#00c875"></span></div><span class="gcount">36/36</span></div><div class="grow"><span class="gname" title="TikTok Ads">TikTok Ads</span><div class="bar"><span class="seg" title="Done: 7" style="width:100.00%;background:#00c875"></span></div><span class="gcount">7/7</span></div><div class="grow"><span class="gname" title="Google Ads">Google Ads</span><div class="bar"><span class="seg" title="Done: 6" style="width:100.00%;background:#00c875"></span></div><span class="gcount">6/6</span></div></div>
-      </article></div>
-    </section>
-    <section class="unit">
-      <div class="unit-head"><h2>📁 KK Personal Brand</h2>
-        <span class="unit-meta">3 boards · 90 items · 89% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🛡️</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783030" target="_blank" rel="noopener">KK Personal Brand Scorecard</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🎤</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783029" target="_blank" rel="noopener">KK Founder Content Pipeline</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">80/80</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 80" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>80</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Founder Instagram June">Founder Instagram June</span><div class="bar"><span class="seg" title="Done: 39" style="width:100.00%;background:#00c875"></span></div><span class="gcount">39/39</span></div><div class="grow"><span class="gname" title="Founder Instagram April - May">Founder Instagram April - May</span><div class="bar"><span class="seg" title="Done: 41" style="width:100.00%;background:#00c875"></span></div><span class="gcount">41/41</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">👔</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783028" target="_blank" rel="noopener">KK LinkedIn Content Tracker</a>
-            <div class="owner">Owner: Elias · Rule: min 2 posts/week</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/10</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="No status: 10" style="width:100.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#3a4150"></i>No status <b>10</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Backlog — Ideas &amp; Drafts">Backlog — Ideas &amp; Drafts</span><div class="bar"><span class="seg" title="No status: 10" style="width:100.00%;background:#3a4150"></span></div><span class="gcount">0/10</span></div></div>
-      </article></div>
-    </section>
-    <section class="unit">
-      <div class="unit-head"><h2>📁 Governance, Finance &amp; Operations</h2>
-        <span class="unit-meta">6 boards · 4 items · 25% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">✅</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783035" target="_blank" rel="noopener">Sehar Approval Gate — Finance &amp; Vendors</a>
-            <div class="owner">Owner: Sehar · AED &lt; 25k authority</div></div></div>
-          <div class="bstat"><span class="pct">33%</span><span class="count">1/3</span><span class="subpill" title="Subitems">↳ 0/1 subitems</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 1" style="width:33.33%;background:#00c875"></span><span class="seg" title="Working on it: 1" style="width:33.33%;background:#fdab3d"></span><span class="seg" title="No status: 1" style="width:33.33%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>1</b></span><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>1</b></span><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Pending Approval">Pending Approval</span><div class="bar"><span class="seg" title="Done: 1" style="width:33.33%;background:#00c875"></span><span class="seg" title="Working on it: 1" style="width:33.33%;background:#fdab3d"></span><span class="seg" title="No status: 1" style="width:33.33%;background:#3a4150"></span></div><span class="gcount">1/3</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📅</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027801080" target="_blank" rel="noopener">Meeting Cadence &amp; Minutes</a>
-            <div class="owner">Owner: Mohd Amir · Support: Rohit</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📊</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783034" target="_blank" rel="noopener">Team KRAs &amp; Performance</a>
-            <div class="owner">Owner: Akhil &amp; Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📋</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783033" target="_blank" rel="noopener">Marketing Master Plan</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🚩</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783032" target="_blank" rel="noopener">Chairman &amp; COO Task Board</a>
-            <div class="owner">Owner: Chairman &amp; Akhil</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">💰</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783031" target="_blank" rel="noopener">Marketing Budget Tracker</a>
-            <div class="owner">Owner: Akhil + Sehar (dual sign-off)</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/1</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Overheads &amp; Misc">Overheads &amp; Misc</span><div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><span class="gcount">0/1</span></div></div>
-      </article></div>
-    </section>
-    <section class="unit">
-      <div class="unit-head"><h2>📁 Make Noise — Broker Engagement Engine</h2>
-        <span class="unit-meta">5 boards · 13 items · 77% done</span></div>
-      <div class="grid">
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📊</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783662" target="_blank" rel="noopener">Make Noise — Master Dashboard</a>
-            <div class="owner">Owner: Rohit</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/0</span></div>
-        </header>
-        <div class="empty-note">No items yet</div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">📢</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783658" target="_blank" rel="noopener">Layer 1 — Make Noise (BDM Activity Tracker)</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/1</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Working on it: 1" style="width:100.00%;background:#fdab3d"></span></div><div class="chips"><span class="chip"><i style="background:#fdab3d"></i>Working on it <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Activities">Activities</span><div class="bar"><span class="seg" title="Working on it: 1" style="width:100.00%;background:#fdab3d"></span></div><span class="gcount">0/1</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">👁️</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783659" target="_blank" rel="noopener">Layer 2 — Make Noise Visible (Proof Events)</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">100%</span><span class="count">10/10</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="Done: 10" style="width:100.00%;background:#00c875"></span></div><div class="chips"><span class="chip"><i style="background:#00c875"></i>Done <b>10</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Activities">Activities</span><div class="bar"><span class="seg" title="Done: 10" style="width:100.00%;background:#00c875"></span></div><span class="gcount">10/10</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">🏆</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783660" target="_blank" rel="noopener">Layer 3 — Make Noise Enviable (Broker Tiers)</a>
-            <div class="owner">Owner: Elias · Support: Sehar</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/1</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Activity">Activity</span><div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><span class="gcount">0/1</span></div></div>
-      </article>
-      <article class="card">
-        <header>
-          <div class="bname"><span class="bemoji">💎</span>
-            <div><a href="https://pered-squad.monday.com/boards/5027783661" target="_blank" rel="noopener">Layer 4 — Make Noise Profitable (Future)</a>
-            <div class="owner">Owner: Elias</div></div></div>
-          <div class="bstat"><span class="pct">0%</span><span class="count">0/1</span></div>
-        </header>
-        <div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><div class="chips"><span class="chip"><i style="background:#3a4150"></i>No status <b>1</b></span></div><div class="groups"><div class="grow"><span class="gname" title="Activity">Activity</span><div class="bar"><span class="seg" title="No status: 1" style="width:100.00%;background:#3a4150"></span></div><span class="gcount">0/1</span></div></div>
-      </article></div>
-    </section>
-  <footer>
-    Source: monday.com workspace <a href="https://pered-squad.monday.com/workspaces/2928343" target="_blank" rel="noopener">Pantheon Marcom Workplace A26 (2928343)</a>,
-    pulled live via MCP on 6 July 2026. All 28 boards across 6 folders returned live data this pull (previous build 29 Jun: 1,469 items, 1,383 done).<br>
-    Done = items with status <b>Done</b>/<b>Completed</b> · No status = items with an empty status label · Pending = everything else (incl. Stuck, On hold, Confirmed, revisions).
-  </footer>
-</body>
-</html>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span class="badge">🟢 Live Report</span>
+    <button id="dl-btn" class="dl-btn" onclick="downloadImg()">📥 Download as Image</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+  function downloadImg(){
+    var btn=document.getElementById('dl-btn');var orig=btn.innerHTML;btn.innerHTML='⏳ Generating...';btn.disabled=true;
+    html2canvas(document.body,{backgroundColor:'#0f1117',scale:2,useCORS:true,windowWidth:document.body.scrollWidth,windowHeight:document.body.scrollHeight}).then(function(canvas){
+      var link=document.createElement('a');link.download='Pantheon_A26_Operations_Dashboard-'+new Date().toISOString().slice(0,10)+'.png';link.href=canvas.toDataURL('image/png');link.click();
+      btn.innerHTML=orig;btn.disabled=false;
+    }).catch(function(e){alert('Download failed: '+e.message);btn.innerHTML=orig;btn.disabled=false;});
+  }
+  </script>
+</div>
+
+<div class="main">
+
+  <div class="cards">
+    <div class="card blue"><div class="card-icon">📋</div><div class="card-label">Total Tasks</div><div class="card-value">1,581</div><div class="card-sub">+ 47 subitems = 1,628 all-in</div></div>
+    <div class="card green"><div class="card-icon">✅</div><div class="card-label">Completed</div><div class="card-value">1,497</div><div class="card-sub">+ 30 subitem done</div></div>
+    <div class="card yellow"><div class="card-icon">⏳</div><div class="card-label">Pending</div><div class="card-value">62</div><div class="card-sub">In flight (items)</div></div>
+    <div class="card red"><div class="card-icon">⬜</div><div class="card-label">Not Filled</div><div class="card-value">22</div><div class="card-sub">+ 17 subitem blank</div></div>
+    <div class="card purple"><div class="card-icon">📈</div><div class="card-label">Team Productivity</div><div class="card-value">95%</div><div class="card-sub">94% incl. subitems</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>👥 Owner Performance Tracker</h2><span class="pill">Live item-level · July 6</span></div>
+    <table>
+      <thead><tr>
+        <th>Owner</th><th class="center">Boards</th><th class="center">Items Owned</th><th class="center">Done</th><th class="center">Working</th><th>Progress</th><th class="center">Role</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Muhammed Rasheed</div></td>
+          <td style="padding:14px 16px;" class="center">7</td>
+          <td style="padding:14px 16px;" class="center num-blue">402</td>
+          <td style="padding:14px 16px;" class="center num-green">382</td>
+          <td style="padding:14px 16px;" class="center num-yellow">20</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Social Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Anees Ul Haq</div></td>
+          <td style="padding:14px 16px;" class="center">4</td>
+          <td style="padding:14px 16px;" class="center num-blue">287</td>
+          <td style="padding:14px 16px;" class="center num-green">273</td>
+          <td style="padding:14px 16px;" class="center num-yellow">14</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip red-pill">Events Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Laxman Gurung</div></td>
+          <td style="padding:14px 16px;" class="center">4</td>
+          <td style="padding:14px 16px;" class="center num-blue">234</td>
+          <td style="padding:14px 16px;" class="center num-green">233</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#8b5cf6;width:99%;"></div></div><span class="bar-pct">99%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Digital Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Sehar Nadeem</div></td>
+          <td style="padding:14px 16px;" class="center">6</td>
+          <td style="padding:14px 16px;" class="center num-blue">128</td>
+          <td style="padding:14px 16px;" class="center num-green">123</td>
+          <td style="padding:14px 16px;" class="center num-yellow">5</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f97316;width:96%;"></div></div><span class="bar-pct">96%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip orange-pill">Events &amp; Approvals</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Nagi Castillo Faronieya</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">128</td>
+          <td style="padding:14px 16px;" class="center num-green">118</td>
+          <td style="padding:14px 16px;" class="center num-yellow">10</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#fbbf24;width:92%;"></div></div><span class="bar-pct">92%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip gold-pill">Video Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Rinas Mullappilly</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">113</td>
+          <td style="padding:14px 16px;" class="center num-green">113</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Mohammed Fayiz</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">101</td>
+          <td style="padding:14px 16px;" class="center num-green">100</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:99%;"></div></div><span class="bar-pct">99%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Lipin Lawrence</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">69</td>
+          <td style="padding:14px 16px;" class="center num-green">69</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Magalie Mouawad</div></td>
+          <td style="padding:14px 16px;" class="center">3</td>
+          <td style="padding:14px 16px;" class="center num-blue">46</td>
+          <td style="padding:14px 16px;" class="center num-green">42</td>
+          <td style="padding:14px 16px;" class="center num-yellow">4</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:91%;"></div></div><span class="bar-pct">91%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Creative Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Mohd Amir</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">31</td>
+          <td style="padding:14px 16px;" class="center num-green">31</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Digital Support</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Elias</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">14</td>
+          <td style="padding:14px 16px;" class="center num-green">13</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#22c55e;width:93%;"></div></div><span class="bar-pct">93%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip green-pill">CMO Oversight</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Jishnu Sai Anand</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">2</td>
+          <td style="padding:14px 16px;" class="center num-green">2</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Support</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>📋 Board-by-Board Status</h2><span class="pill">28 boards · 6 Units · +subitems</span></div>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 1 — Brand &amp; Content · 5 boards · 831 items · +20 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎨 Creative Brief &amp; Production Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Magalie / Lipin / Nagi / Fayiz / Rinas</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">336</span> / 342</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:98%;"></div></div><span class="bar-pct">98% · +16 sub (7✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📱 Social Media Content Calendar</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Muhammed Rasheed / Mohd Amir</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">295</span> / 305</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:97%;"></div></div><span class="bar-pct">97% · +4 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎬 Video &amp; Photography Production</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Nagi / Fayiz / Rinas / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">116</span> / 125</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:93%;"></div></div><span class="bar-pct">93%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📰 PR &amp; Media Relations</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip active">Active</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">32</span> / 57</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#579bfc;width:56%;"></div></div><span class="bar-pct">56%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📄 Brand Collateral Library</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Magalie Mouawad</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">2</span> / 2</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 2 — Engagement &amp; Partnerships · 5 boards · 380 items · +1 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎪 Event Activations</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Anees Ul Haq</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">302</span> / 315</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:96%;"></div></div><span class="bar-pct">96% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📇 Vendor &amp; Agency Registry</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Anees Ul Haq / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">37</span> / 39</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🤝 Broker Activations &amp; Engagement</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Anees Ul Haq</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">24</span> / 25</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:96%;"></div></div><span class="bar-pct">96%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏘️ Community &amp; Stakeholder Outreach</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Akhil</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏛️ Institutional &amp; JV Outreach</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Lara / Abhishek / Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 3 — Digital &amp; Analytics · 4 boards · 263 items · +25 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📈 Marketing Dashboards &amp; KPIs</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman Gurung / Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">123</span> / 123</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📧 CRM, Email &amp; WhatsApp Campaigns</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">57</span> / 58</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:98%;"></div></div><span class="bar-pct">98% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Performance Marketing &amp; Paid Media</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman Gurung</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">49</span> / 49</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +10 sub (10✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🌐 Website &amp; SEO Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Amir / Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">33</span> / 33</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +13 sub (13✓)</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 4 — KK Personal Brand · 3 boards · 90 items</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎤 KK Founder Content Pipeline</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Muhammed Rasheed / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">80</span> / 80</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">👔 KK LinkedIn Content Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Behind</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 10</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f39c12;width:0%;"></div></div><span class="bar-pct">0%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🛡️ KK Personal Brand Scorecard</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Governance, Finance &amp; Operations · 6 boards · 4 items · +1 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">✅ Sehar Approval Gate</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Behind</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">1</span> / 3</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f39c12;width:33%;"></div></div><span class="bar-pct">33% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💰 Marketing Budget Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Akhil + Sehar (dual sign-off)</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Team KRAs &amp; Performance</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Akhil &amp; Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📋 Marketing Master Plan</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🚩 Chairman &amp; COO Task Board</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Chairman &amp; Akhil</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📅 Meeting Cadence &amp; Minutes</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Mohd Amir / Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Make Noise — Broker Engagement Engine · 5 boards · 13 items</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">👁️ Layer 2 — Make Noise Visible</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar / Anees / Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">10</span> / 10</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📢 Layer 1 — Make Noise (BDM)</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏆 Layer 3 — Make Noise Enviable</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💎 Layer 4 — Make Noise Profitable</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Make Noise — Master Dashboard</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>🗂️ Board Groups &amp; Tasks</h2><span class="pill">Every group + ⤷ subitems · Done / Total</span></div>
+    <table>
+      <thead><tr><th>Board</th><th>Groups within board — <b>done / total</b></th><th>Owner(s)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>🎨 Creative Brief &amp; Production</strong></td><td><span class="group-pill">Group Title <b>336/342</b></span><span class="group-pill">⤷ Subitems <b>7/16</b></span></td><td><div class="av-stack"><span class="av magalie">MM</span><span class="av lipin">LL</span><span class="av nagi">NC</span><span class="av fayiz">MF</span><span class="av rinas">RN</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📱 Social Media Content Calendar</strong></td><td><span class="group-pill">Pantheon Instagram <b>165/165</b></span><span class="group-pill">Pantheon Linkedin <b>25/25</b></span><span class="group-pill">AI Studio <b>26/26</b></span><span class="group-pill">Google Business <b>9/9</b></span><span class="group-pill">General Social <b>7/7</b></span><span class="group-pill">June Calendar <b>61/70</b></span><span class="group-pill">Other <b>2/3</b></span><span class="group-pill">⤷ Subitems <b>0/4</b></span></td><td><div class="av-stack"><span class="av rasheed">MR</span><span class="av amir">MA</span></div></td></tr>
+        <tr><td><strong>🎬 Video &amp; Photography Production</strong></td><td><span class="group-pill">Group Title <b>116/125</b></span></td><td><div class="av-stack"><span class="av nagi">NC</span><span class="av rinas">RN</span><span class="av fayiz">MF</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>📰 PR &amp; Media Relations</strong></td><td><span class="group-pill">Office Launch Media List <b>18/18</b></span><span class="group-pill">Office Launch Influencer List <b>9/31</b></span><span class="group-pill">New Group <b>5/8</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>📄 Brand Collateral Library</strong></td><td><span class="group-pill">Group Title <b>2/2</b></span></td><td><div class="av-stack"><span class="av magalie">MM</span><span class="av fayiz">MF</span><span class="av rinas">RN</span><span class="av lipin">LL</span><span class="av jishnu">JS</span></div></td></tr>
+        <tr><td><strong>🎪 Event Activations</strong></td><td><span class="group-pill">Event Organization <b>124/124</b></span><span class="group-pill">Pantheon Event Tasks <b>123/133</b></span><span class="group-pill">General Tasks <b>55/58</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span><span class="av anees">AH</span></div></td></tr>
+        <tr><td><strong>📇 Vendor &amp; Agency Registry</strong></td><td><span class="group-pill">Vendor &amp; Purchase Orders <b>22/24</b></span><span class="group-pill">Vendors <b>15/15</b></span></td><td><div class="av-stack"><span class="av anees">AH</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>🤝 Broker Activations &amp; Engagement</strong></td><td><span class="group-pill">Brokers Pull Initiatives <b>20/21</b></span><span class="group-pill">May 2026 <b>4/4</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span><span class="av anees">AH</span></div></td></tr>
+        <tr><td><strong>🏘️ Community &amp; Stakeholder Outreach</strong></td><td><span class="group-pill">Group Title <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av akhil">AK</span></div></td></tr>
+        <tr><td><strong>🏛️ Institutional &amp; JV Outreach</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av lara">LS</span><span class="av abhishek">AP</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📧 CRM, Email &amp; WhatsApp</strong></td><td><span class="group-pill">Lead Management <b>22/23</b></span><span class="group-pill">WhatsApp Campaign <b>20/20</b></span><span class="group-pill">Email Campaign <b>14/14</b></span><span class="group-pill">Zoho Forms <b>1/1</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>🌐 Website &amp; SEO Tracker</strong></td><td><span class="group-pill">On-Page SEO <b>14/14</b></span><span class="group-pill">pantheon.ae <b>11/11</b></span><span class="group-pill">Off-Page SEO <b>8/8</b></span><span class="group-pill">⤷ Subitems <b>13/13</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av amir">MA</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>📊 Performance Marketing</strong></td><td><span class="group-pill">META Ads <b>36/36</b></span><span class="group-pill">TikTok Ads <b>7/7</b></span><span class="group-pill">Google Ads <b>6/6</b></span><span class="group-pill">⤷ Subitems <b>10/10</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span></div></td></tr>
+        <tr><td><strong>📈 Marketing Dashboards &amp; KPIs</strong></td><td><span class="group-pill">Artist/Event Intel <b>47/47</b></span><span class="group-pill">PACS (AI Content Studio) <b>44/44</b></span><span class="group-pill">Data Research AI Tool <b>14/14</b></span><span class="group-pill">Founder/Brand Intel <b>11/11</b></span><span class="group-pill">Data Scrapping <b>4/4</b></span><span class="group-pill">Lead Reports <b>3/3</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av rohit">RB</span></div></td></tr>
+        <tr><td><strong>🎤 KK Founder Content Pipeline</strong></td><td><span class="group-pill">Founder Instagram Apr-May <b>41/41</b></span><span class="group-pill">Founder Instagram June <b>39/39</b></span></td><td><div class="av-stack"><span class="av rasheed">MR</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>👔 KK LinkedIn Content Tracker</strong></td><td><span class="group-pill">Backlog — Ideas &amp; Drafts <b>0/10</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>🛡️ KK Personal Brand Scorecard</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>✅ Sehar Approval Gate</strong></td><td><span class="group-pill">Pending Approval <b>1/3</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>💰 Marketing Budget Tracker</strong></td><td><span class="group-pill">Overheads &amp; Misc <b>0/1</b></span></td><td><div class="av-stack"><span class="av akhil">AK</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>📊 Team KRAs &amp; Performance</strong></td><td><span class="group-pill zero">Tier 1 — CMO · Tier 2 ×3 <b>0/0</b></span></td><td><div class="av-stack"><span class="av akhil">AK</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📋 Marketing Master Plan</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>🚩 Chairman &amp; COO Task Board</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av chairman">KK</span><span class="av akhil">AK</span></div></td></tr>
+        <tr><td><strong>📅 Meeting Cadence &amp; Minutes</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av amir">MA</span><span class="av rohit">RB</span></div></td></tr>
+        <tr><td><strong>📢 Make Noise — Layers 1-4 + Dashboard</strong></td><td><span class="group-pill">Layer 1 — BDM <b>0/1</b></span><span class="group-pill">Layer 2 — Visible <b>10/10</b></span><span class="group-pill">Layer 3 — Enviable <b>0/1</b></span><span class="group-pill">Layer 4 — Profitable <b>0/1</b></span><span class="group-pill zero">Master Dashboard <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av sehar">SN</span><span class="av anees">AH</span><span class="av rohit">RB</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">Pantheon Marcom Workplace A26 (ID 2928343) &nbsp;|&nbsp; Operations Dashboard &nbsp;|&nbsp; live monday.com pull · July 6, 2026 &nbsp;|&nbsp; 28 boards · 1,581 items (1,497 done / 62 pending / 22 blank) + 47 subitems (30 done / 17 blank) = 1,628 all-in · 1,527 done · 12 active owners</div>
+</body></html>
