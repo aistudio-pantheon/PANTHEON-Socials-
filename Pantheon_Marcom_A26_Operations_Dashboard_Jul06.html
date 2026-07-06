@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pantheon Marcom A26 — Operations Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#0f1117;color:#e8eaed;min-height:100vh;}
+.top-bar{background:linear-gradient(135deg,#1a1d2e 0%,#16213e 50%,#0f3460 100%);padding:24px 32px;border-bottom:1px solid #2a2d3e;display:flex;align-items:center;justify-content:space-between;}
+.top-bar h1{font-size:22px;font-weight:800;}
+.top-bar .sub{font-size:13px;color:#94a3b8;margin-top:4px;}
+.badge{background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;}
+.dl-btn{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:#34d399;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:10px;font-family:'Inter',sans-serif;}
+.dl-btn:disabled{opacity:0.6;cursor:wait;}
+.main{padding:28px 32px;}
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px;}
+.card{background:linear-gradient(135deg,#1e2132,#252840);border:1px solid #2e3150;border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .2s;}
+.card:hover{transform:translateY(-2px);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.card.blue::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+.card.green::before{background:linear-gradient(90deg,#10b981,#34d399);}
+.card.yellow::before{background:linear-gradient(90deg,#f59e0b,#fcd34d);}
+.card.red::before{background:linear-gradient(90deg,#ef4444,#f87171);}
+.card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+.card.teal::before{background:linear-gradient(90deg,#14b8a6,#2dd4bf);}
+.card-icon{font-size:28px;margin-bottom:8px;}
+.card-label{font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+.card-value{font-size:32px;font-weight:800;line-height:1;}
+.card.blue .card-value{color:#60a5fa;}
+.card.green .card-value{color:#34d399;}
+.card.yellow .card-value{color:#fcd34d;}
+.card.red .card-value{color:#f87171;}
+.card.purple .card-value{color:#a78bfa;}
+.card.teal .card-value{color:#2dd4bf;}
+.card-sub{font-size:11px;color:#64748b;margin-top:4px;}
+.top-perf-inline{display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#0f1117;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section{background:#1e2132;border:1px solid #2e3150;border-radius:16px;margin-bottom:24px;overflow:hidden;}
+.section-header{padding:18px 24px;background:linear-gradient(135deg,#252840,#1e2132);border-bottom:1px solid #2e3150;display:flex;align-items:center;gap:10px;}
+.section-header h2{font-size:16px;font-weight:700;color:#e8eaed;}
+.section-header .pill{background:rgba(167,139,250,0.15);color:#a78bfa;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;}
+.unit-band{background:rgba(167,139,250,0.06);padding:10px 24px;color:#a78bfa;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-top:1px solid #2e3150;border-bottom:1px solid #2e3150;}
+.unit-band .folder{margin-right:6px;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#252840;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:12px 16px;text-align:left;border-bottom:1px solid #2e3150;}
+tbody tr{border-bottom:1px solid #1a1d2e;transition:background .15s;}
+tbody tr:hover{background:rgba(167,139,250,0.04);}
+tbody tr:last-child{border-bottom:none;}
+.bar-wrap{background:#2a2d3e;border-radius:4px;height:6px;overflow:hidden;}
+.bar-fill{height:6px;border-radius:4px;}
+.bar-pct{font-size:11px;color:#94a3b8;margin-top:4px;display:block;}
+.chip{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:600;color:#fff;display:inline-block;}
+.chip.excellent{background:#27ae60;}
+.chip.good{background:#2ecc71;}
+.chip.partial{background:#f39c12;}
+.chip.attn{background:#e67e22;}
+.chip.critical{background:#e74c3c;}
+.chip.active{background:#579bfc;}
+.chip.empty{background:#7f8c8d;}
+.chip.purple{background:#a78bfa;color:#0f1117;}
+.chip.red-pill{background:#ef4444;}
+.chip.green-pill{background:#10b981;}
+.chip.blue-pill{background:#3b82f6;}
+.chip.orange-pill{background:#f97316;}
+.chip.gold-pill{background:#fbbf24;color:#0f1117;}
+.center{text-align:center;}
+.bold{font-weight:700;}
+.num-green{color:#34d399;font-weight:700;}
+.num-yellow{color:#fcd34d;font-weight:700;}
+.num-blue{color:#60a5fa;font-weight:700;}
+.footer{text-align:center;padding:20px;color:#4a5568;font-size:12px;border-top:1px solid #2e3150;}
+.live-link{color:#a78bfa;text-decoration:none;border-bottom:1px dotted #a78bfa;}
+.live-link:hover{color:#c4b5fd;}
+.group-pill{display:inline-block;background:rgba(96,165,250,0.12);color:#93c5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;margin:2px;}
+.group-pill b{color:#e8eaed;}
+.group-pill.zero{background:rgba(148,163,184,0.1);color:#94a3b8;}
+.av{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;border-radius:50%;color:#fff;font-weight:800;font-size:11px;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);}
+.av.lg{width:64px;height:64px;font-size:20px;}
+.av.md{width:44px;height:44px;font-size:15px;}
+.av.sm{width:26px;height:26px;font-size:10px;}
+.av.magalie{background:linear-gradient(135deg,#ec4899,#be185d);}
+.av.lipin{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.av.nagi{background:linear-gradient(135deg,#14b8a6,#0f766e);}
+.av.fayiz{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.av.elias{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.av.rasheed{background:linear-gradient(135deg,#10b981,#047857);}
+.av.anees{background:linear-gradient(135deg,#dc2626,#991b1b);}
+.av.sehar{background:linear-gradient(135deg,#f97316,#c2410c);}
+.av.amir{background:linear-gradient(135deg,#06b6d4,#0e7490);}
+.av.laxman{background:linear-gradient(135deg,#6366f1,#4338ca);}
+.av.akhil{background:linear-gradient(135deg,#64748b,#334155);}
+.av.rohit{background:linear-gradient(135deg,#a16207,#713f12);}
+.av.lara{background:linear-gradient(135deg,#84cc16,#4d7c0f);}
+.av.abhishek{background:linear-gradient(135deg,#0ea5e9,#0369a1);}
+.av.otc{background:linear-gradient(135deg,#facc15,#a16207);color:#0a0c14;}
+.av.chairman{background:linear-gradient(135deg,#fbbf24,#92400e);color:#0a0c14;}
+.av.jishnu{background:linear-gradient(135deg,#22d3ee,#0891b2);}
+.av.rinas{background:linear-gradient(135deg,#22c55e,#15803d);}
+.av-stack{display:inline-flex;align-items:center;}
+.av-stack .av{margin-left:-10px;}
+.av-stack .av:first-child{margin-left:0;}
+.person{display:inline-flex;align-items:center;gap:8px;}
+.person .name{font-weight:600;font-size:13px;color:#e8eaed;}
+.section{background:#1e2132;border:1px solid #2e3150;border-radius:18px;margin-bottom:24px;overflow:hidden;}
+.section-header{padding:20px 26px;background:linear-gradient(135deg,#252840,#1e2132);border-bottom:1px solid #2e3150;display:flex;align-items:center;gap:12px;}
+.section-header h2{font-size:17px;font-weight:800;color:#e8eaed;}
+.section-header .pill{background:rgba(167,139,250,0.15);color:#a78bfa;border-radius:12px;padding:3px 12px;font-size:12px;font-weight:600;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#252840;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:14px 18px;text-align:left;border-bottom:1px solid #2e3150;}
+tbody tr{border-bottom:1px solid #1a1d2e;transition:background .15s;}
+tbody tr:hover{background:rgba(167,139,250,0.05);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:14px 18px;font-size:13px;}
+.bar-wrap{background:#2a2d3e;border-radius:6px;height:8px;overflow:hidden;position:relative;}
+.bar-fill{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--bc-start,#27ae60),var(--bc-end,#10b981));}
+.bar-pct{font-size:11px;color:#94a3b8;margin-top:4px;display:block;}
+.chip{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.3px;}
+.chip.excellent{background:linear-gradient(135deg,#10b981,#047857);}
+.chip.good{background:linear-gradient(135deg,#2ecc71,#1e8449);}
+.chip.partial{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.chip.attn{background:linear-gradient(135deg,#f97316,#c2410c);}
+.chip.critical{background:linear-gradient(135deg,#ef4444,#991b1b);}
+.chip.active{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.chip.empty{background:linear-gradient(135deg,#64748b,#334155);}
+.chip.crown{background:linear-gradient(135deg,#a78bfa,#7c3aed);}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <h1>⚡ Pantheon Marcom A26 — Operations Dashboard</h1>
+    <div class="sub">Workspace: Pantheon Marcom Workplace A26 · 28 boards · 6 Units · 1,581 items + 47 subitems &nbsp;|&nbsp; live monday.com pull · July 6, 2026</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span class="badge">🟢 Live Report</span>
+    <button id="dl-btn" class="dl-btn" onclick="downloadImg()">📥 Download as Image</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+  function downloadImg(){
+    var btn=document.getElementById('dl-btn');var orig=btn.innerHTML;btn.innerHTML='⏳ Generating...';btn.disabled=true;
+    html2canvas(document.body,{backgroundColor:'#0f1117',scale:2,useCORS:true,windowWidth:document.body.scrollWidth,windowHeight:document.body.scrollHeight}).then(function(canvas){
+      var link=document.createElement('a');link.download='Pantheon_A26_Operations_Dashboard-'+new Date().toISOString().slice(0,10)+'.png';link.href=canvas.toDataURL('image/png');link.click();
+      btn.innerHTML=orig;btn.disabled=false;
+    }).catch(function(e){alert('Download failed: '+e.message);btn.innerHTML=orig;btn.disabled=false;});
+  }
+  </script>
+</div>
+
+<div class="main">
+
+  <div class="cards">
+    <div class="card blue"><div class="card-icon">📋</div><div class="card-label">Total Tasks</div><div class="card-value">1,581</div><div class="card-sub">+ 47 subitems = 1,628 all-in</div></div>
+    <div class="card green"><div class="card-icon">✅</div><div class="card-label">Completed</div><div class="card-value">1,497</div><div class="card-sub">+ 30 subitem done</div></div>
+    <div class="card yellow"><div class="card-icon">⏳</div><div class="card-label">Pending</div><div class="card-value">62</div><div class="card-sub">In flight (items)</div></div>
+    <div class="card red"><div class="card-icon">⬜</div><div class="card-label">Not Filled</div><div class="card-value">22</div><div class="card-sub">+ 17 subitem blank</div></div>
+    <div class="card purple"><div class="card-icon">📈</div><div class="card-label">Team Productivity</div><div class="card-value">95%</div><div class="card-sub">94% incl. subitems</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>👥 Owner Performance Tracker</h2><span class="pill">Live item-level · July 6</span></div>
+    <table>
+      <thead><tr>
+        <th>Owner</th><th class="center">Boards</th><th class="center">Items Owned</th><th class="center">Done</th><th class="center">Working</th><th>Progress</th><th class="center">Role</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Muhammed Rasheed</div></td>
+          <td style="padding:14px 16px;" class="center">7</td>
+          <td style="padding:14px 16px;" class="center num-blue">402</td>
+          <td style="padding:14px 16px;" class="center num-green">382</td>
+          <td style="padding:14px 16px;" class="center num-yellow">20</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Social Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Anees Ul Haq</div></td>
+          <td style="padding:14px 16px;" class="center">4</td>
+          <td style="padding:14px 16px;" class="center num-blue">287</td>
+          <td style="padding:14px 16px;" class="center num-green">273</td>
+          <td style="padding:14px 16px;" class="center num-yellow">14</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip red-pill">Events Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Laxman Gurung</div></td>
+          <td style="padding:14px 16px;" class="center">4</td>
+          <td style="padding:14px 16px;" class="center num-blue">234</td>
+          <td style="padding:14px 16px;" class="center num-green">233</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#8b5cf6;width:99%;"></div></div><span class="bar-pct">99%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Digital Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Sehar Nadeem</div></td>
+          <td style="padding:14px 16px;" class="center">6</td>
+          <td style="padding:14px 16px;" class="center num-blue">128</td>
+          <td style="padding:14px 16px;" class="center num-green">123</td>
+          <td style="padding:14px 16px;" class="center num-yellow">5</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f97316;width:96%;"></div></div><span class="bar-pct">96%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip orange-pill">Events &amp; Approvals</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Nagi Castillo Faronieya</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">128</td>
+          <td style="padding:14px 16px;" class="center num-green">118</td>
+          <td style="padding:14px 16px;" class="center num-yellow">10</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#fbbf24;width:92%;"></div></div><span class="bar-pct">92%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip gold-pill">Video Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Rinas Mullappilly</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">113</td>
+          <td style="padding:14px 16px;" class="center num-green">113</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Mohammed Fayiz</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">101</td>
+          <td style="padding:14px 16px;" class="center num-green">100</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:99%;"></div></div><span class="bar-pct">99%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Lipin Lawrence</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">69</td>
+          <td style="padding:14px 16px;" class="center num-green">69</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Magalie Mouawad</div></td>
+          <td style="padding:14px 16px;" class="center">3</td>
+          <td style="padding:14px 16px;" class="center num-blue">46</td>
+          <td style="padding:14px 16px;" class="center num-green">42</td>
+          <td style="padding:14px 16px;" class="center num-yellow">4</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:91%;"></div></div><span class="bar-pct">91%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Creative Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Mohd Amir</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">31</td>
+          <td style="padding:14px 16px;" class="center num-green">31</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Digital Support</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Elias</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">14</td>
+          <td style="padding:14px 16px;" class="center num-green">13</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#22c55e;width:93%;"></div></div><span class="bar-pct">93%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip green-pill">CMO Oversight</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Jishnu Sai Anand</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">2</td>
+          <td style="padding:14px 16px;" class="center num-green">2</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Support</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>📋 Board-by-Board Status</h2><span class="pill">28 boards · 6 Units · +subitems</span></div>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 1 — Brand &amp; Content · 5 boards · 831 items · +20 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎨 Creative Brief &amp; Production Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Magalie / Lipin / Nagi / Fayiz / Rinas</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">336</span> / 342</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:98%;"></div></div><span class="bar-pct">98% · +16 sub (7✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📱 Social Media Content Calendar</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Muhammed Rasheed / Mohd Amir</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">295</span> / 305</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:97%;"></div></div><span class="bar-pct">97% · +4 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎬 Video &amp; Photography Production</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Nagi / Fayiz / Rinas / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">116</span> / 125</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:93%;"></div></div><span class="bar-pct">93%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📰 PR &amp; Media Relations</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip active">Active</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">32</span> / 57</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#579bfc;width:56%;"></div></div><span class="bar-pct">56%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📄 Brand Collateral Library</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Magalie Mouawad</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">2</span> / 2</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 2 — Engagement &amp; Partnerships · 5 boards · 380 items · +1 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎪 Event Activations</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Anees Ul Haq</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">302</span> / 315</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:96%;"></div></div><span class="bar-pct">96% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📇 Vendor &amp; Agency Registry</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Anees Ul Haq / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">37</span> / 39</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🤝 Broker Activations &amp; Engagement</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem / Anees Ul Haq</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">24</span> / 25</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:96%;"></div></div><span class="bar-pct">96%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏘️ Community &amp; Stakeholder Outreach</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Akhil</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏛️ Institutional &amp; JV Outreach</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Lara / Abhishek / Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 3 — Digital &amp; Analytics · 4 boards · 263 items · +25 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📈 Marketing Dashboards &amp; KPIs</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman Gurung / Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">123</span> / 123</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📧 CRM, Email &amp; WhatsApp Campaigns</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">57</span> / 58</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:98%;"></div></div><span class="bar-pct">98% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Performance Marketing &amp; Paid Media</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman Gurung</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">49</span> / 49</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +10 sub (10✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🌐 Website &amp; SEO Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Laxman / Amir / Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">33</span> / 33</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100% · +13 sub (13✓)</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Unit 4 — KK Personal Brand · 3 boards · 90 items</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎤 KK Founder Content Pipeline</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Muhammed Rasheed / Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">80</span> / 80</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">👔 KK LinkedIn Content Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Behind</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 10</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f39c12;width:0%;"></div></div><span class="bar-pct">0%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🛡️ KK Personal Brand Scorecard</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Governance, Finance &amp; Operations · 6 boards · 4 items · +1 subitems</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">✅ Sehar Approval Gate</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Sehar Nadeem</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Behind</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">1</span> / 3</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f39c12;width:33%;"></div></div><span class="bar-pct">33% · +1 sub (0✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💰 Marketing Budget Tracker</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Akhil + Sehar (dual sign-off)</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Team KRAs &amp; Performance</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Akhil &amp; Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📋 Marketing Master Plan</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🚩 Chairman &amp; COO Task Board</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Chairman &amp; Akhil</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📅 Meeting Cadence &amp; Minutes</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Mohd Amir / Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="unit-band"><span class="folder">📁</span> Make Noise — Broker Engagement Engine · 5 boards · 13 items</div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">👁️ Layer 2 — Make Noise Visible</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar / Anees / Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">10</span> / 10</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📢 Layer 1 — Make Noise (BDM)</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏆 Layer 3 — Make Noise Enviable</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Sehar</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💎 Layer 4 — Make Noise Profitable</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Light Load</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:60%;"></div></div><span class="bar-pct">Skeleton</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Make Noise — Master Dashboard</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Rohit</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">Empty</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>🗂️ Board Groups &amp; Tasks</h2><span class="pill">Every group + ⤷ subitems · Done / Total</span></div>
+    <table>
+      <thead><tr><th>Board</th><th>Groups within board — <b>done / total</b></th><th>Owner(s)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>🎨 Creative Brief &amp; Production</strong></td><td><span class="group-pill">Group Title <b>336/342</b></span><span class="group-pill">⤷ Subitems <b>7/16</b></span></td><td><div class="av-stack"><span class="av magalie">MM</span><span class="av lipin">LL</span><span class="av nagi">NC</span><span class="av fayiz">MF</span><span class="av rinas">RN</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📱 Social Media Content Calendar</strong></td><td><span class="group-pill">Pantheon Instagram <b>165/165</b></span><span class="group-pill">Pantheon Linkedin <b>25/25</b></span><span class="group-pill">AI Studio <b>26/26</b></span><span class="group-pill">Google Business <b>9/9</b></span><span class="group-pill">General Social <b>7/7</b></span><span class="group-pill">June Calendar <b>61/70</b></span><span class="group-pill">Other <b>2/3</b></span><span class="group-pill">⤷ Subitems <b>0/4</b></span></td><td><div class="av-stack"><span class="av rasheed">MR</span><span class="av amir">MA</span></div></td></tr>
+        <tr><td><strong>🎬 Video &amp; Photography Production</strong></td><td><span class="group-pill">Group Title <b>116/125</b></span></td><td><div class="av-stack"><span class="av nagi">NC</span><span class="av rinas">RN</span><span class="av fayiz">MF</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>📰 PR &amp; Media Relations</strong></td><td><span class="group-pill">Office Launch Media List <b>18/18</b></span><span class="group-pill">Office Launch Influencer List <b>9/31</b></span><span class="group-pill">New Group <b>5/8</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>📄 Brand Collateral Library</strong></td><td><span class="group-pill">Group Title <b>2/2</b></span></td><td><div class="av-stack"><span class="av magalie">MM</span><span class="av fayiz">MF</span><span class="av rinas">RN</span><span class="av lipin">LL</span><span class="av jishnu">JS</span></div></td></tr>
+        <tr><td><strong>🎪 Event Activations</strong></td><td><span class="group-pill">Event Organization <b>124/124</b></span><span class="group-pill">Pantheon Event Tasks <b>123/133</b></span><span class="group-pill">General Tasks <b>55/58</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span><span class="av anees">AH</span></div></td></tr>
+        <tr><td><strong>📇 Vendor &amp; Agency Registry</strong></td><td><span class="group-pill">Vendor &amp; Purchase Orders <b>22/24</b></span><span class="group-pill">Vendors <b>15/15</b></span></td><td><div class="av-stack"><span class="av anees">AH</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>🤝 Broker Activations &amp; Engagement</strong></td><td><span class="group-pill">Brokers Pull Initiatives <b>20/21</b></span><span class="group-pill">May 2026 <b>4/4</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span><span class="av anees">AH</span></div></td></tr>
+        <tr><td><strong>🏘️ Community &amp; Stakeholder Outreach</strong></td><td><span class="group-pill">Group Title <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av akhil">AK</span></div></td></tr>
+        <tr><td><strong>🏛️ Institutional &amp; JV Outreach</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av lara">LS</span><span class="av abhishek">AP</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📧 CRM, Email &amp; WhatsApp</strong></td><td><span class="group-pill">Lead Management <b>22/23</b></span><span class="group-pill">WhatsApp Campaign <b>20/20</b></span><span class="group-pill">Email Campaign <b>14/14</b></span><span class="group-pill">Zoho Forms <b>1/1</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>🌐 Website &amp; SEO Tracker</strong></td><td><span class="group-pill">On-Page SEO <b>14/14</b></span><span class="group-pill">pantheon.ae <b>11/11</b></span><span class="group-pill">Off-Page SEO <b>8/8</b></span><span class="group-pill">⤷ Subitems <b>13/13</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av amir">MA</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>📊 Performance Marketing</strong></td><td><span class="group-pill">META Ads <b>36/36</b></span><span class="group-pill">TikTok Ads <b>7/7</b></span><span class="group-pill">Google Ads <b>6/6</b></span><span class="group-pill">⤷ Subitems <b>10/10</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span></div></td></tr>
+        <tr><td><strong>📈 Marketing Dashboards &amp; KPIs</strong></td><td><span class="group-pill">Artist/Event Intel <b>47/47</b></span><span class="group-pill">PACS (AI Content Studio) <b>44/44</b></span><span class="group-pill">Data Research AI Tool <b>14/14</b></span><span class="group-pill">Founder/Brand Intel <b>11/11</b></span><span class="group-pill">Data Scrapping <b>4/4</b></span><span class="group-pill">Lead Reports <b>3/3</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av laxman">LG</span><span class="av rohit">RB</span></div></td></tr>
+        <tr><td><strong>🎤 KK Founder Content Pipeline</strong></td><td><span class="group-pill">Founder Instagram Apr-May <b>41/41</b></span><span class="group-pill">Founder Instagram June <b>39/39</b></span></td><td><div class="av-stack"><span class="av rasheed">MR</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>👔 KK LinkedIn Content Tracker</strong></td><td><span class="group-pill">Backlog — Ideas &amp; Drafts <b>0/10</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>🛡️ KK Personal Brand Scorecard</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>✅ Sehar Approval Gate</strong></td><td><span class="group-pill">Pending Approval <b>1/3</b></span><span class="group-pill">⤷ Subitems <b>0/1</b></span></td><td><div class="av-stack"><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>💰 Marketing Budget Tracker</strong></td><td><span class="group-pill">Overheads &amp; Misc <b>0/1</b></span></td><td><div class="av-stack"><span class="av akhil">AK</span><span class="av sehar">SN</span></div></td></tr>
+        <tr><td><strong>📊 Team KRAs &amp; Performance</strong></td><td><span class="group-pill zero">Tier 1 — CMO · Tier 2 ×3 <b>0/0</b></span></td><td><div class="av-stack"><span class="av akhil">AK</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📋 Marketing Master Plan</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>🚩 Chairman &amp; COO Task Board</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av chairman">KK</span><span class="av akhil">AK</span></div></td></tr>
+        <tr><td><strong>📅 Meeting Cadence &amp; Minutes</strong></td><td><span class="group-pill zero">Group Title <b>0/0</b></span></td><td><div class="av-stack"><span class="av amir">MA</span><span class="av rohit">RB</span></div></td></tr>
+        <tr><td><strong>📢 Make Noise — Layers 1-4 + Dashboard</strong></td><td><span class="group-pill">Layer 1 — BDM <b>0/1</b></span><span class="group-pill">Layer 2 — Visible <b>10/10</b></span><span class="group-pill">Layer 3 — Enviable <b>0/1</b></span><span class="group-pill">Layer 4 — Profitable <b>0/1</b></span><span class="group-pill zero">Master Dashboard <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av sehar">SN</span><span class="av anees">AH</span><span class="av rohit">RB</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">Pantheon Marcom Workplace A26 (ID 2928343) &nbsp;|&nbsp; Operations Dashboard &nbsp;|&nbsp; live monday.com pull · July 6, 2026 &nbsp;|&nbsp; 28 boards · 1,581 items (1,497 done / 62 pending / 22 blank) + 47 subitems (30 done / 17 blank) = 1,628 all-in · 1,527 done · 12 active owners</div>
+</body></html>

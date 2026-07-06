@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Eyeconix Marcoms — Operations Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#0f1117;color:#e8eaed;min-height:100vh;}
+.top-bar{background:linear-gradient(135deg,#1a1d2e 0%,#16213e 50%,#0f3460 100%);padding:24px 32px;border-bottom:1px solid #2a2d3e;display:flex;align-items:center;justify-content:space-between;}
+.top-bar h1{font-size:22px;font-weight:800;}
+.top-bar .sub{font-size:13px;color:#94a3b8;margin-top:4px;}
+.badge{background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;}
+.dl-btn{background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:#34d399;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:10px;font-family:'Inter',sans-serif;}
+.dl-btn:disabled{opacity:0.6;cursor:wait;}
+.main{padding:28px 32px;}
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px;}
+.card{background:linear-gradient(135deg,#1e2132,#252840);border:1px solid #2e3150;border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .2s;}
+.card:hover{transform:translateY(-2px);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.card.blue::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+.card.green::before{background:linear-gradient(90deg,#10b981,#34d399);}
+.card.yellow::before{background:linear-gradient(90deg,#f59e0b,#fcd34d);}
+.card.red::before{background:linear-gradient(90deg,#ef4444,#f87171);}
+.card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+.card.teal::before{background:linear-gradient(90deg,#14b8a6,#2dd4bf);}
+.card-icon{font-size:28px;margin-bottom:8px;}
+.card-label{font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+.card-value{font-size:32px;font-weight:800;line-height:1;}
+.card.blue .card-value{color:#60a5fa;}
+.card.green .card-value{color:#34d399;}
+.card.yellow .card-value{color:#fcd34d;}
+.card.red .card-value{color:#f87171;}
+.card.purple .card-value{color:#a78bfa;}
+.card.teal .card-value{color:#2dd4bf;}
+.card-sub{font-size:11px;color:#64748b;margin-top:4px;}
+.top-perf-inline{display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#0f1117;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section{background:#1e2132;border:1px solid #2e3150;border-radius:16px;margin-bottom:24px;overflow:hidden;}
+.section-header{padding:18px 24px;background:linear-gradient(135deg,#252840,#1e2132);border-bottom:1px solid #2e3150;display:flex;align-items:center;gap:10px;}
+.section-header h2{font-size:16px;font-weight:700;color:#e8eaed;}
+.section-header .pill{background:rgba(167,139,250,0.15);color:#a78bfa;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;}
+.unit-band{background:rgba(167,139,250,0.06);padding:10px 24px;color:#a78bfa;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-top:1px solid #2e3150;border-bottom:1px solid #2e3150;}
+.unit-band .folder{margin-right:6px;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#252840;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:12px 16px;text-align:left;border-bottom:1px solid #2e3150;}
+tbody tr{border-bottom:1px solid #1a1d2e;transition:background .15s;}
+tbody tr:hover{background:rgba(167,139,250,0.04);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:14px 18px;font-size:13px;color:#cbd5e1;vertical-align:middle;}
+.group-pill{line-height:1.9;}
+.bar-wrap{background:#2a2d3e;border-radius:4px;height:6px;overflow:hidden;}
+.bar-fill{height:6px;border-radius:4px;}
+.bar-pct{font-size:11px;color:#94a3b8;margin-top:4px;display:block;}
+.chip{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:600;color:#fff;display:inline-block;}
+.chip.excellent{background:#27ae60;}
+.chip.good{background:#2ecc71;}
+.chip.partial{background:#f39c12;}
+.chip.attn{background:#e67e22;}
+.chip.critical{background:#e74c3c;}
+.chip.active{background:#579bfc;}
+.chip.empty{background:#7f8c8d;}
+.chip.purple{background:#a78bfa;color:#0f1117;}
+.chip.red-pill{background:#ef4444;}
+.chip.green-pill{background:#10b981;}
+.chip.blue-pill{background:#3b82f6;}
+.chip.orange-pill{background:#f97316;}
+.chip.gold-pill{background:#fbbf24;color:#0f1117;}
+.center{text-align:center;}
+.bold{font-weight:700;}
+.num-green{color:#34d399;font-weight:700;}
+.num-yellow{color:#fcd34d;font-weight:700;}
+.num-blue{color:#60a5fa;font-weight:700;}
+.footer{text-align:center;padding:20px;color:#4a5568;font-size:12px;border-top:1px solid #2e3150;}
+.live-link{color:#a78bfa;text-decoration:none;border-bottom:1px dotted #a78bfa;}
+.live-link:hover{color:#c4b5fd;}
+.group-pill{display:inline-block;background:rgba(96,165,250,0.12);color:#93c5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;margin:2px;}
+.group-pill b{color:#e8eaed;}
+.group-pill.zero{background:rgba(148,163,184,0.1);color:#94a3b8;}
+.av{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;border-radius:50%;color:#fff;font-weight:800;font-size:11px;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);}
+.av.lg{width:64px;height:64px;font-size:20px;}
+.av.md{width:44px;height:44px;font-size:15px;}
+.av.sm{width:26px;height:26px;font-size:10px;}
+.av.magalie{background:linear-gradient(135deg,#ec4899,#be185d);}
+.av.lipin{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.av.nagi{background:linear-gradient(135deg,#14b8a6,#0f766e);}
+.av.fayiz{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.av.elias{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.av.rasheed{background:linear-gradient(135deg,#10b981,#047857);}
+.av.anees{background:linear-gradient(135deg,#dc2626,#991b1b);}
+.av.sehar{background:linear-gradient(135deg,#f97316,#c2410c);}
+.av.amir{background:linear-gradient(135deg,#06b6d4,#0e7490);}
+.av.laxman{background:linear-gradient(135deg,#6366f1,#4338ca);}
+.av.akhil{background:linear-gradient(135deg,#64748b,#334155);}
+.av.rohit{background:linear-gradient(135deg,#a16207,#713f12);}
+.av.lara{background:linear-gradient(135deg,#84cc16,#4d7c0f);}
+.av.abhishek{background:linear-gradient(135deg,#0ea5e9,#0369a1);}
+.av.rinas{background:linear-gradient(135deg,#f43f5e,#9f1239);}
+.av.otc{background:linear-gradient(135deg,#facc15,#a16207);color:#0a0c14;}
+.av.chairman{background:linear-gradient(135deg,#fbbf24,#92400e);color:#0a0c14;}
+.av.jishnu{background:linear-gradient(135deg,#22d3ee,#0891b2);}
+.av-stack{display:inline-flex;align-items:center;}
+.av-stack .av{margin-left:-10px;}
+.av-stack .av:first-child{margin-left:0;}
+
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <h1>🎬 Eyeconix Marcoms — Operations Dashboard</h1>
+    <div class="sub">Workspace: Eyeconix Marcoms · 8 boards · 373 items + 29 subitems &nbsp;|&nbsp; live monday.com pull · July 6, 2026 · all 8 boards live ✅</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span class="badge">🟢 Live Report</span>
+    <button id="dl-btn" class="dl-btn" onclick="downloadImg()">📥 Download as Image</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+  function downloadImg(){
+    var btn=document.getElementById('dl-btn');var orig=btn.innerHTML;btn.innerHTML='⏳ Generating...';btn.disabled=true;
+    html2canvas(document.body,{backgroundColor:'#0f1117',scale:2,useCORS:true,windowWidth:document.body.scrollWidth,windowHeight:document.body.scrollHeight}).then(function(canvas){
+      var link=document.createElement('a');link.download='Eyeconix_Marcoms_Dashboard-'+new Date().toISOString().slice(0,10)+'.png';link.href=canvas.toDataURL('image/png');link.click();
+      btn.innerHTML=orig;btn.disabled=false;
+    }).catch(function(e){alert('Download failed: '+e.message);btn.innerHTML=orig;btn.disabled=false;});
+  }
+  </script>
+</div>
+
+<div class="main">
+
+  <div class="cards">
+    <div class="card blue"><div class="card-icon">📋</div><div class="card-label">Total Tasks</div><div class="card-value">373</div><div class="card-sub">Across 8 boards · all live</div></div>
+    <div class="card green"><div class="card-icon">✅</div><div class="card-label">Completed</div><div class="card-value">277</div><div class="card-sub">Released / Done / Active / Confirmed</div></div>
+    <div class="card yellow"><div class="card-icon">⏳</div><div class="card-label">Pending</div><div class="card-value">82</div><div class="card-sub">In-flight (53 Planned + 17 Jul/Aug)</div></div>
+    <div class="card red"><div class="card-icon">⬜</div><div class="card-label">Not Filled</div><div class="card-value">14</div><div class="card-sub">8 new pipeline prospects unstaged</div></div>
+    <div class="card purple"><div class="card-icon">📈</div><div class="card-label">Team Productivity</div><div class="card-value">74%</div><div class="card-sub">Workspace completion rate</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>👥 Owner Performance Tracker</h2><span class="pill">Live · all 8 boards · July 6</span></div>
+    <table>
+      <thead><tr>
+        <th>Owner</th><th class="center">Boards</th><th class="center">Items Owned</th><th class="center">Done</th><th class="center">Working</th><th>Progress</th><th class="center">Role</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Muhammed Rasheed</div></td>
+          <td style="padding:14px 16px;" class="center">2</td>
+          <td style="padding:14px 16px;" class="center num-blue">179</td>
+          <td style="padding:14px 16px;" class="center num-green">114</td>
+          <td style="padding:14px 16px;" class="center num-yellow">65</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:64%;"></div></div><span class="bar-pct">64%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Social Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Magalie Mouawad</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">111</td>
+          <td style="padding:14px 16px;" class="center num-green">103</td>
+          <td style="padding:14px 16px;" class="center num-yellow">8</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#a78bfa;width:93%;"></div></div><span class="bar-pct">93%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip purple">Creative Lead</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Mohammed Fayiz</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">21</td>
+          <td style="padding:14px 16px;" class="center num-green">20</td>
+          <td style="padding:14px 16px;" class="center num-yellow">1</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:95%;"></div></div><span class="bar-pct">95%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Elias</div></td>
+          <td style="padding:14px 16px;" class="center">7</td>
+          <td style="padding:14px 16px;" class="center num-blue">18</td>
+          <td style="padding:14px 16px;" class="center num-green">13</td>
+          <td style="padding:14px 16px;" class="center num-yellow">5</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#22c55e;width:72%;"></div></div><span class="bar-pct">72%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip green-pill">CMO / Oversight</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Nagi Castillo Faronieya</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">17</td>
+          <td style="padding:14px 16px;" class="center num-green">15</td>
+          <td style="padding:14px 16px;" class="center num-yellow">2</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#fbbf24;width:88%;"></div></div><span class="bar-pct">88%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip gold-pill">Video / Creative</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Lipin Lawrence</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">12</td>
+          <td style="padding:14px 16px;" class="center num-green">12</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#3b82f6;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Lara Saad</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">3</td>
+          <td style="padding:14px 16px;" class="center num-green">3</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#84cc16;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip orange-pill">Accounts &amp; BD</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 16px;"><div style="font-weight:600;font-size:14px;">Rinas Mullappilly</div></td>
+          <td style="padding:14px 16px;" class="center">1</td>
+          <td style="padding:14px 16px;" class="center num-blue">1</td>
+          <td style="padding:14px 16px;" class="center num-green">1</td>
+          <td style="padding:14px 16px;" class="center num-yellow">0</td>
+          <td style="padding:14px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#f43f5e;width:100%;"></div></div><span class="bar-pct">100%</span></td>
+          <td style="padding:14px 16px;" class="center"><span class="chip blue-pill">Creative Senior</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>📋 Board-by-Board Status</h2><span class="pill">8 boards · all live</span></div>
+    <table>
+      <thead><tr><th>Board</th><th>Owner / Support</th><th class="center">Hygiene</th><th class="center">Done / Total</th><th>Completion / Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🎨 Creative Production &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Magalie / Lipin / Nagi / Fayiz</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip excellent">Excellent</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">169</span> / 180</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:94%;"></div></div><span class="bar-pct">94% · RDK 6/11 (5 in Client Review) · +29 sub (13✓)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📱 Social Media Operations &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Muhammed Rasheed</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip active">Active Queue</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">104</span> / 170</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#579bfc;width:61%;"></div></div><span class="bar-pct">61% · 53 Planned (17 Jul/Aug) + 8 Cancelled</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">🏢 Clients &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Lara</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip good">Active</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">2</span> / 3</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#27ae60;width:67%;"></div></div><span class="bar-pct">66.7% · 1 missing Status</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📋 Briefs &amp; Projects &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Lara</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip attn">Under-utilised</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 1</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#e67e22;width:35%;"></div></div><span class="bar-pct">In Progress · 1 brief vs 180 assets</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💡 Strategic IP &amp; Initiatives &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip partial">In Development</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 2</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#9d50dd;width:50%;"></div></div><span class="bar-pct">In Development · Approval Pending</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📊 Retainer &amp; Revenue Tracker &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Lara</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip active">Confirmed</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">2</span> / 2</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#579bfc;width:100%;"></div></div><span class="bar-pct">100% Confirmed · 0 Invoiced / Paid</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">💼 New Business Pipeline &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias / Lara</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip active">In Pipeline</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 15</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#579bfc;width:47%;"></div></div><span class="bar-pct">3 Qualified · 2 Proposal Sent · 2 Pitched · 8 new unstaged</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;font-size:13px;font-weight:500;">📺 Media &amp; Production Partners &nbsp;</td>
+          <td style="padding:12px 16px;font-size:13px;color:#94a3b8;">Elias</td>
+          <td style="padding:12px 16px;" class="center"><span class="chip critical">Critical — Empty</span></td>
+          <td style="padding:12px 16px;" class="center"><span class="num-blue">0</span> / 0</td>
+          <td style="padding:12px 16px;min-width:160px;"><div class="bar-wrap"><div class="bar-fill" style="background:#ef4444;width:0%;"></div></div><span class="bar-pct">🚨 No items registered</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>🗂️ Board Groups &amp; Tasks</h2><span class="pill">Every group + ⤷ subitems · Done / Total</span></div>
+    <table>
+      <thead><tr><th>Board</th><th>Groups within board — <b>done / total</b></th><th>Owner(s)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>🎨 Creative Production</strong></td><td><span class="group-pill">🏛️ DBWC <b>81/83</b></span><span class="group-pill">EyeConyx <b>43/47</b></span><span class="group-pill">HOP <b>28/28</b></span><span class="group-pill">🎵 HOP x Eyeconyx <b>11/11</b></span><span class="group-pill">RDK <b>6/11</b></span><span class="group-pill">⤷ Subitems <b>13/29</b></span></td><td><div class="av-stack"><span class="av magalie">MM</span><span class="av lipin">LL</span><span class="av nagi">NC</span><span class="av fayiz">MF</span><span class="av rinas">RN</span></div></td></tr>
+        <tr><td><strong>📱 Social Media Operations</strong></td><td><span class="group-pill">DBWC Events <b>70/95</b></span><span class="group-pill">DBWC April–May <b>23/32</b></span><span class="group-pill">July &amp; August DBWC <b>0/17</b></span><span class="group-pill">DBWC June Calendar <b>2/11</b></span><span class="group-pill">HOP Digital Mktg <b>9/9</b></span><span class="group-pill">HOP Events Socials <b>0/4</b></span><span class="group-pill">Eyeconyx June Socials <b>0/2</b></span></td><td><div class="av-stack"><span class="av rasheed">MR</span></div></td></tr>
+        <tr><td><strong>🏢 Clients</strong></td><td><span class="group-pill">Group Title <b>2/3</b></span></td><td><div class="av-stack"><span class="av lara">LS</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📋 Briefs &amp; Projects</strong></td><td><span class="group-pill">Projects <b>0/1</b></span></td><td><div class="av-stack"><span class="av elias">EL</span><span class="av lara">LS</span></div></td></tr>
+        <tr><td><strong>💡 Strategic IP &amp; Initiatives</strong></td><td><span class="group-pill">Group Title <b>0/2</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📊 Retainer &amp; Revenue Tracker</strong></td><td><span class="group-pill">Group Title <b>2/2</b></span></td><td><div class="av-stack"><span class="av lara">LS</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>💼 New Business Pipeline</strong></td><td><span class="group-pill">Group Title <b>0/15</b></span></td><td><div class="av-stack"><span class="av lara">LS</span><span class="av elias">EL</span></div></td></tr>
+        <tr><td><strong>📺 Media &amp; Production Partners</strong></td><td><span class="group-pill zero">No items yet <b>0/0</b></span></td><td><div class="av-stack"><span class="av elias">EL</span></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">Eyeconix Marcoms (ID 2913453) &nbsp;|&nbsp; Operations Dashboard &nbsp;|&nbsp; live monday.com pull · July 6, 2026 &nbsp;|&nbsp; 8 boards · 373 items · 277 done · 82 pending · 14 blank · 74% complete + 29 subitems (13 done) &nbsp;|&nbsp; All 8 boards returned live data this pull — Clients / Briefs / Strategic IP / Retainer / Pipeline / Media Partners restored (previously frozen at June 22 snapshot)</div>
+</body></html>
