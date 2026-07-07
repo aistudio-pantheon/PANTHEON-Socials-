@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pantheon.ae — Consolidated Multi-Tool SEO Audit — July 2026</title>
+<style>
+  :root {
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --hairline: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+    --good: #0ca30c;
+    --warning: #fab219;
+    --serious: #ec835a;
+    --critical: #d03b3b;
+    --good-bg: rgba(12,163,12,0.10);
+    --warning-bg: rgba(250,178,25,0.14);
+    --serious-bg: rgba(236,131,90,0.13);
+    --critical-bg: rgba(208,59,59,0.10);
+    --accent: #2a78d6;
+    --code-bg: #f0efec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --hairline: #2c2c2a;
+      --border: rgba(255,255,255,0.10);
+      --good-bg: rgba(12,163,12,0.16);
+      --warning-bg: rgba(250,178,25,0.14);
+      --serious-bg: rgba(236,131,90,0.15);
+      --critical-bg: rgba(208,59,59,0.18);
+      --accent: #3987e5;
+      --code-bg: #26261f;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6; font-size: 16px;
+  }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.report-head { border-bottom: 1px solid var(--hairline); padding-bottom: 28px; margin-bottom: 32px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  h1 { font-size: 30px; line-height: 1.25; letter-spacing: -0.01em; }
+  .subtitle { color: var(--ink-2); margin-top: 8px; max-width: 760px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .meta-row strong { color: var(--ink-2); font-weight: 600; }
+
+  h2 { font-size: 22px; margin: 54px 0 6px; letter-spacing: -0.01em; padding-top: 26px; border-top: 1px solid var(--hairline); }
+  h2 .secno { color: var(--muted); font-weight: 600; margin-right: 10px; }
+  h3 { font-size: 16.5px; margin: 30px 0 8px; }
+  h4.sub { font-size: 14px; margin: 22px 0 6px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  p { margin: 10px 0; color: var(--ink-2); }
+  p strong, li strong { color: var(--ink); }
+  ul, ol { margin: 10px 0 10px 22px; color: var(--ink-2); }
+  li { margin: 5px 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.875em; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 24px 0; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .tile .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .tile .value { font-size: 32px; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+  .tile .value small { font-size: 15px; color: var(--muted); font-weight: 600; }
+  .tile .note { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  .tile.critical .value { color: var(--critical); }
+  .tile.serious .value { color: var(--serious); }
+  .tile.neutral .value { color: var(--ink); }
+  .tile.good .value { color: var(--good); }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .badge.critical { background: var(--critical-bg); color: var(--critical); }
+  .badge.high     { background: var(--serious-bg);  color: #b3552e; }
+  .badge.medium   { background: var(--warning-bg);  color: #8a6205; }
+  .badge.low      { background: var(--code-bg);     color: var(--ink-2); }
+  .badge.positive { background: var(--good-bg);     color: var(--good); }
+  .badge.conf     { background: var(--good-bg);     color: var(--good); }
+  .badge.single   { background: var(--code-bg);     color: var(--ink-2); }
+  .badge.conflict { background: var(--warning-bg);  color: #8a6205; }
+  @media (prefers-color-scheme: dark) {
+    .badge.high   { color: var(--serious); }
+    .badge.medium, .badge.conflict { color: var(--warning); }
+  }
+
+  .finding { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 14px 0; }
+  .finding .fhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .finding .fid { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .finding h4 { font-size: 15.5px; display: inline; }
+  .finding p { font-size: 14.5px; }
+  .finding .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 18px; margin: 10px 0 4px; font-size: 13px; }
+  .finding .facts div { color: var(--ink-2); }
+  .finding .facts b { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; display: block; }
+  .finding .fix { margin-top: 10px; padding: 10px 14px; border-left: 3px solid var(--good); background: var(--good-bg); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--ink-2); }
+  .finding .fix strong { color: var(--ink); }
+
+  .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .v-bad { color: var(--critical); font-weight: 600; }
+  .v-mid { color: #b3552e; font-weight: 600; }
+  .v-good { color: var(--good); font-weight: 600; }
+  .v-na { color: var(--muted); }
+  @media (prefers-color-scheme: dark) { .v-mid { color: var(--serious); } }
+
+  .callout { border: 1px solid var(--border); border-left: 4px solid var(--accent); background: var(--surface); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 18px 0; font-size: 14.5px; color: var(--ink-2); }
+  .callout.warn { border-left-color: var(--serious); }
+  .callout strong { color: var(--ink); }
+
+  /* meter bars: value labels always visible; color paired with pass/fail text */
+  .meter { margin: 6px 0; }
+  .meter .mlabel { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-2); margin-bottom: 2px; }
+  .meter .mlabel b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .meter .track { height: 8px; background: var(--code-bg); border-radius: 4px; overflow: hidden; position: relative; }
+  .meter .fill { height: 100%; border-radius: 4px; }
+  .meter .fill.bad { background: var(--critical); }
+  .meter .fill.mid { background: var(--serious); }
+  .meter .fill.ok { background: var(--good); }
+
+  .prio { font-weight: 700; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; white-space: nowrap; }
+  .prio.p0 { color: var(--critical); }
+  .prio.p1 { color: #b3552e; }
+  .prio.p2 { color: var(--accent); }
+  .prio.p3 { color: var(--muted); }
+  @media (prefers-color-scheme: dark) { .prio.p1 { color: var(--serious); } }
+
+  .check { list-style: none; margin-left: 0; }
+  .check li { padding-left: 26px; position: relative; margin: 7px 0; font-size: 14.5px; }
+  .check li::before { content: "☐"; position: absolute; left: 0; top: 0; color: var(--muted); font-size: 15px; }
+
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 22px; margin: 22px 0; }
+  .toc ol { margin: 6px 0 2px 20px; columns: 2; column-gap: 40px; }
+  .toc li { margin: 3px 0; font-size: 13.5px; break-inside: avoid; }
+  @media (max-width: 640px) { .toc ol { columns: 1; } }
+
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--hairline); font-size: 12.5px; color: var(--muted); }
+  @media print {
+    body { background: #fff; }
+    .finding, .tablewrap, .tile, .toc, .callout { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="report-head">
+  <div class="eyebrow">Consolidated SEO Audit — Client Report</div>
+  <h1>pantheon.ae — Comprehensive SEO Audit<br>Consolidated from 4 Independent Tools</h1>
+  <p class="subtitle">One unified audit merging the findings of four independent reports — an AI SERP/DNS audit, SEOptimer, SEOmator, and Semrush — with duplicates merged, conflicts explained, and every issue prioritized by SEO impact.</p>
+  <div class="meta-row">
+    <span><strong>Site:</strong> https://pantheon.ae/</span>
+    <span><strong>Audit date:</strong> 7 July 2026</span>
+    <span><strong>Sources:</strong> 4 tool reports, cross-verified</span>
+    <span><strong>Prepared for:</strong> PANTHEON Development</span>
+  </div>
+</header>
+
+<!-- ================================================================ -->
+<h2 id="exec" style="border-top:none;padding-top:0;margin-top:20px"><span class="secno">1</span>Executive Summary</h2>
+
+<div class="kpi-row">
+  <div class="tile critical"><div class="label">Consolidated SEO Score</div><div class="value">57<small>/100</small></div><div class="note">Semrush 58 · SEOmator 80 (see §12)</div></div>
+  <div class="tile serious"><div class="label">Website Health</div><div class="value">At risk</div><div class="note">Strong skeleton, failing vitals &amp; authority</div></div>
+  <div class="tile critical"><div class="label">Critical Problems</div><div class="value">7</div><div class="note">⛔ Confirmed by ≥2 tools</div></div>
+  <div class="tile good"><div class="label">Major Strengths</div><div class="value">6</div><div class="note">✓ HTTPS, mobile, URLs, HTML, blog, brand SERP</div></div>
+  <div class="tile neutral"><div class="label">Overall Grade</div><div class="value">D+</div><div class="note">→ B+/A− achievable in 90 days</div></div>
+</div>
+
+<p><strong>The one-paragraph verdict.</strong> pantheon.ae is a well-built Next.js site with clean URLs, valid HTML, working HTTPS and a genuinely good blog — wrapped around four problems that cap everything: (1) <strong>the brand competes with itself</strong> across at least five owned domains, with a full duplicate corporate site occupying positions #2–#5 of Pantheon's own brand results; (2) <strong>the crawl-control layer is missing entirely</strong> — no robots.txt, no XML sitemap, no canonical tags, no structured data; (3) <strong>the homepage ships 36–49&nbsp;MB</strong> and fails mobile Core Web Vitals (INP 503&nbsp;ms — 2.5× the limit); and (4) <strong>real earned authority barely exists</strong> — the strongest backlinks are Pantheon's own other domains, and 86.9% of all organic traffic depends on a single blog post. Brokers consequently outrank the developer for its own project names, converting Pantheon's organic demand into commissioned leads.</p>
+
+<h3>Critical problems (all confirmed by multiple tools)</h3>
+<ol>
+  <li><strong>Duplicate corporate domain</strong> (pantheondevelopment.ae) cannibalizing brand &amp; project SERPs — 4/4 tools</li>
+  <li><strong>No robots.txt, no XML sitemap, no canonical tags</strong> — 3/4 tools</li>
+  <li><strong>Mobile Core Web Vitals fail</strong> (field INP 503 ms, CLS 0.11) — 3/4 tools</li>
+  <li><strong>Extreme page weight</strong> (36.7–48.6 MB homepage; 27.6 s mobile Time-to-Interactive) — 2 tools</li>
+  <li><strong>Broken conversion elements</strong>: <code>tel:undefined</code> / <code>mailto:undefined</code> links and 6 empty nav links on a lead-gen homepage — 3/4 tools</li>
+  <li><strong>Zero structured data</strong> sitewide — 3/4 tools</li>
+  <li><strong>Traffic concentration</strong>: 86.9% of organic visits land on one blog post — Semrush (unique, but from measured analytics)</li>
+</ol>
+
+<h3>Major strengths (protect these)</h3>
+<ul>
+  <li>HTTPS with working redirects, clean URL slugs, correct viewport, valid HTML — SEOmator scores all 100</li>
+  <li>#1–#2 for exact brand queries ("pantheon elysee", "Pantheon Development Dubai")</li>
+  <li>A well-targeted blog cluster (JVC/JVT/RAK guides) that already earns nearly all the site's traffic</li>
+  <li>Email security present (SPF + DMARC), analytics stack correctly installed (GA, GTM, Pixel)</li>
+  <li>Healthy indexation (~20+ pages) — the problem is authority and plumbing, not discovery</li>
+  <li>488 ranking keywords and ≈8.4K monthly organic visits to build from</li>
+</ul>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#exec">Executive Summary</a></li>
+    <li><a href="#matrix">Tool Comparison Matrix</a></li>
+    <li><a href="#technical">Technical SEO Findings</a></li>
+    <li><a href="#onpage">On-Page SEO Analysis</a></li>
+    <li><a href="#offpage">Off-Page SEO Analysis</a></li>
+    <li><a href="#performance">Performance Comparison</a></li>
+    <li><a href="#security">Security Analysis</a></li>
+    <li><a href="#a11y">Accessibility Analysis</a></li>
+    <li><a href="#mobile">Mobile SEO</a></li>
+    <li><a href="#schema">Structured Data Analysis</a></li>
+    <li><a href="#dupes">Duplicate Issues &amp; Conflicting Data</a></li>
+    <li><a href="#plan">Priority Action Plan &amp; Checklist</a></li>
+    <li><a href="#roadmap">30-Day Roadmap</a></li>
+    <li><a href="#score">Final SEO Score &amp; Forecast</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="matrix"><span class="secno">2</span>Tool Comparison Matrix</h2>
+<p>Every metric requested, across all four sources. <em>Tool A</em> = AI SERP/DNS audit (crawl-less, index-based); <em>Tool B</em> = SEOptimer-based consolidated crawl; <em>Tool C</em> = SEOmator (171-check crawl + Lighthouse); <em>Tool D</em> = Semrush (site check + PageSpeed field data + backlink index). "—" means the tool does not measure that metric.</p>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Metric</th><th>A · AI audit</th><th>B · SEOptimer</th><th>C · SEOmator</th><th>D · Semrush</th><th>Most reliable / verdict</th></tr></thead>
+  <tbody>
+    <tr><td>SEO Score</td><td class="v-na">n/a (qualitative)</td><td class="v-na">n/a (qualitative)</td><td class="num v-mid">80/100</td><td class="num v-bad">58/100</td><td><strong>Consolidated: 57</strong> — Semrush weights criticals harder; SEOmator rewards passing basics (see §12)</td></tr>
+    <tr><td>Health Score</td><td class="v-mid">"At risk"</td><td class="v-bad">Critical (off-page)</td><td class="v-mid">"Good" skeleton</td><td class="v-bad">7 critical + 6 warnings</td><td>Semrush issue counts — check-based, reproducible</td></tr>
+    <tr><td>Domain Authority (Moz)</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td rowspan="4">Not measured by any provided tool. Nearest equivalent: <strong>Semrush Authority Score 26/100</strong> (low). Get Moz DA / Ahrefs DR in a follow-up if needed — they will tell the same story at this size.</td></tr>
+    <tr><td>Page Authority (Moz)</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td></tr>
+    <tr><td>Domain Rating / URL Rating (Ahrefs)</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td></tr>
+    <tr><td>Trust Score / Spam Score</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td></tr>
+    <tr><td>Authority Score</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="num v-bad">26/100</td><td>Semrush (only source) — low, and partly self-referential (§5)</td></tr>
+    <tr><td>Organic Traffic</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="num v-mid">≈8,400/mo</td><td>Semrush estimate; GSC is ground truth. 86.9% on one URL</td></tr>
+    <tr><td>Organic Keywords</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td class="num">488</td><td>Semrush (only source); nearly all brand terms</td></tr>
+    <tr><td>Backlinks</td><td class="v-na">—</td><td class="num v-bad">91</td><td class="v-na">—</td><td class="v-na">(not stated)</td><td rowspan="2"><span class="badge conflict">△ Conflict</span> 5 vs 176 referring domains — different index sizes &amp; live-vs-historical counting; both agree top links are directories/own domains. Truth: <strong>very few quality earned links</strong>. Verify in GSC + Ahrefs (§11)</td></tr>
+    <tr><td>Referring Domains</td><td class="v-na">—</td><td class="num v-bad">5</td><td class="v-na">—</td><td class="num v-mid">176</td></tr>
+    <tr><td>Indexed Pages</td><td class="num v-good">20+ confirmed</td><td class="v-na">—</td><td class="v-na">—</td><td class="v-na">—</td><td>Tool A (site: operator). GSC coverage report is ground truth</td></tr>
+    <tr><td>Crawl Errors</td><td class="v-mid">403 to bots (verified)</td><td class="v-mid">crawler variance</td><td class="v-na">crawl OK</td><td class="v-mid">5 fetch routes blocked</td><td><span class="badge conf">✓ Multi-tool</span> WAF blocks most non-Google bots</td></tr>
+    <tr><td>Broken Links</td><td class="v-na">—</td><td class="num v-bad">2 (tel:/mailto:undefined)</td><td class="num v-bad">2 + 6 empty nav</td><td class="v-bad">confirmed</td><td><span class="badge conf">✓ Confirmed 3×</span> — homepage contact + nav</td></tr>
+    <tr><td>Duplicate Content</td><td class="v-bad">Entire duplicate domain</td><td class="v-bad">confirmed</td><td class="v-bad">confirmed</td><td class="v-bad">confirmed + 3rd domain</td><td><span class="badge conf">✓ Confirmed 4×</span> — the #1 issue</td></tr>
+    <tr><td>Missing/Weak Meta Titles</td><td class="v-bad">5+ pages generic</td><td class="v-mid">67 chars home</td><td class="v-mid">67 chars home</td><td class="v-mid">67 chars + one-word project titles</td><td><span class="badge conf">✓ Confirmed 4×</span></td></tr>
+    <tr><td>Missing/Long Meta Descriptions</td><td class="v-mid">about-us truncates</td><td class="num v-mid">179 chars</td><td class="num v-mid">179 chars</td><td class="num v-mid">179 chars</td><td><span class="badge conf">✓ Confirmed 4×</span></td></tr>
+    <tr><td>Canonical Tags</td><td class="v-mid">inconsistent (inferred)</td><td class="v-bad">none</td><td class="v-bad">none</td><td class="v-bad">none</td><td><span class="badge conf">✓ Confirmed 3×</span> — absent sitewide</td></tr>
+    <tr><td>Redirect Issues</td><td class="v-mid">www variant indexed</td><td class="num v-mid">0.63 s chain</td><td class="v-good">redirects 100/100</td><td class="v-bad">HTTP not forced (flagged)</td><td><span class="badge conflict">△ Conflict</span> — verify http:// and www hops per host (§11)</td></tr>
+    <tr><td>XML Sitemap</td><td class="v-na">unverified</td><td class="v-bad">missing</td><td class="v-bad">missing</td><td class="v-bad">missing</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>Robots.txt</td><td class="v-na">unverified</td><td class="v-bad">missing</td><td class="v-bad">missing</td><td class="v-bad">missing</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>Core Web Vitals (field)</td><td class="v-na">—</td><td class="v-bad">INP 503ms · CLS 0.11 · LCP 2.5s</td><td class="v-bad">failed (lab LCP 5.0s)</td><td class="v-bad">INP 503ms · CLS 0.11</td><td><span class="badge conf">✓ Confirmed 3×</span> — mobile CWV FAIL; field data (CrUX) is authoritative</td></tr>
+    <tr><td>Mobile Friendliness</td><td class="v-na">—</td><td class="v-good">viewport OK</td><td class="num v-good">100/100</td><td class="v-good">passes</td><td><span class="badge positive">✓ Strength</span></td></tr>
+    <tr><td>HTTPS</td><td class="v-good">valid TLS</td><td class="v-good">enforced</td><td class="num v-good">100/100</td><td class="v-bad">http:// reachable</td><td><span class="badge conflict">△ Conflict</span> — likely host-specific; verify (§11)</td></tr>
+    <tr><td>Page Speed (lab)</td><td class="v-na">—</td><td class="v-bad">TTI 27.6s · SI 14.2s mobile</td><td class="num v-bad">Perf 63 · LCP 5.0s</td><td class="num v-bad">47 desktop / 73 mobile</td><td><span class="badge conf">✓ Confirmed 3×</span> — poor on every run; variance explained §6</td></tr>
+    <tr><td>Structured Data</td><td class="v-na">unverified</td><td class="v-bad">zero</td><td class="v-bad">zero JSON-LD</td><td class="v-bad">zero</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>Internal Linking</td><td class="v-mid">blog→project links missing</td><td class="v-bad">nav links empty</td><td class="v-bad">6 empty nav links</td><td class="v-bad">confirmed</td><td><span class="badge conf">✓ Confirmed 3×</span> — top nav not crawlable</td></tr>
+    <tr><td>External Links</td><td class="v-na">—</td><td class="v-mid">NetSuite raw URL, no noopener</td><td class="v-mid">same</td><td class="v-mid">same</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>Image SEO</td><td class="v-na">—</td><td class="v-bad">219/314 missing alt (rendered)</td><td class="num v-mid">84/100 · no srcset · alt="logo"×5</td><td class="v-mid">no srcset, sizes</td><td><span class="badge conflict">△ Conflict on alt</span> — rendered vs source DOM (§11); no srcset confirmed 2×</td></tr>
+    <tr><td>JavaScript Issues</td><td class="v-na">—</td><td class="v-bad">30% JS-rendered · 456KiB unused · 656KB inline</td><td class="v-bad">456KiB unused · blocking chunk 1.13s</td><td class="v-bad">TBT 500ms · undefined interpolation</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>CSS Issues</td><td class="v-na">—</td><td class="v-good">minified</td><td class="v-mid">4 content images in CSS backgrounds</td><td class="v-mid">contrast via CSS</td><td>Minor; move content imagery to &lt;img&gt;</td></tr>
+    <tr><td>Security Headers</td><td class="v-na">unverified</td><td class="v-bad">all missing</td><td class="v-bad">all missing</td><td class="v-mid">HSTS missing</td><td><span class="badge conf">✓ Confirmed 3×</span></td></tr>
+    <tr><td>Performance (overall)</td><td class="v-mid">no CDN, single origin</td><td class="v-bad">48.6 MB · HTTP/1.1</td><td class="v-bad">36.7 MB · no compression*</td><td class="v-bad">CWV fail</td><td><span class="badge conf">✓ Confirmed 4×</span> (*compression conflict — §11)</td></tr>
+    <tr><td>Accessibility</td><td class="v-na">—</td><td class="num v-mid">Lighthouse 73</td><td class="num v-mid">74 / Lighthouse 73</td><td class="num v-mid">73/100</td><td><span class="badge conf">✓ Confirmed 3×</span> — identical score, same failures</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout"><strong>How to read the tools.</strong> For <em>field performance</em> (real users) trust the CrUX numbers Semrush/SEOptimer surfaced — they're Google's own data and they're what actually feeds rankings. For <em>crawl checks</em> (robots, canonical, schema, headers) trust SEOmator/Semrush, which agree with each other. For <em>backlinks and traffic</em>, Semrush's index is far larger than SEOptimer's, but validate against Google Search Console before acting. For <em>SERP reality</em>, the live ranking checks (Tools A, B, C, D all sampled SERPs) agree on the pattern even where positions differ by query phrasing.</div>
+
+<!-- ================================================================ -->
+<h2 id="technical"><span class="secno">3</span>Technical SEO Findings</h2>
+<p>Merged and de-duplicated. Each issue lists severity, evidence, impact, fix, estimated effort and priority. <span class="badge conf">✓ High confidence</span> = confirmed by 2+ tools; <span class="badge single">◇ Single tool</span> = found by one tool only.</p>
+
+<div class="finding">
+  <div class="fhead"><span class="badge critical">⛔ Critical</span><span class="badge conf">✓ 4/4 tools</span><span class="fid">TECH-1</span><h4>Duplicate corporate domains split and cannibalize the brand</h4></div>
+  <p>A complete duplicate site runs at <code>pantheondevelopment.ae</code> (WordPress/Hostinger) with the identical homepage title, taking #2–#5 on Pantheon's own brand SERP. Semrush's backlink data additionally surfaced <code>pantheonproperties.ae</code>, and Tool A found live campaign microsites <code>elysee3bypantheon.com</code> and <code>1rakcentral.com</code> ranking #1 for their project names. Semrush's decisive detail: <strong>the site's four strongest "backlinks" are links from Pantheon's own other domains</strong> — the Authority Score of 26 is substantially self-referential.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Entire domain + 4 sister domains</div>
+    <div><b>Evidence</b>All four tools independently</div>
+    <div><b>SEO impact</b>Splits links, crawl and brand signals; the single biggest ranking suppressor</div>
+    <div><b>Est. fix time</b>2–4 weeks (mapping + 301s + GSC)</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> keep <code>pantheon.ae</code>; export both domains' backlink profiles first to confirm; then 301 <code>pantheondevelopment.ae</code> and <code>pantheonproperties.ae</code> page-to-page into pantheon.ae (including the <code>/pantheon-elysee-lll/</code> typo slug), file Search Console change-of-address, fold the two microsites into <code>/projects/…</code>, keep broker portals on subdomains, and align the LinkedIn "pered" vanity URL. <strong>Priority: P0.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge critical">⛔ Critical</span><span class="badge conf">✓ 3/4 tools</span><span class="fid">TECH-2</span><h4>No robots.txt, no XML sitemap, no canonical tags</h4></div>
+  <p>All three crawl-control mechanisms are absent (SEOptimer, SEOmator, Semrush concur; Tool A had flagged canonicals as suspect from the www/non-www indexing). Google chooses URL variants by itself — and demonstrably chooses inconsistently (Boulevard indexed under <code>www.</code>). New project pages wait to be discovered by chance.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Sitewide</div>
+    <div><b>Evidence</b>SEOptimer, SEOmator, Semrush</div>
+    <div><b>SEO impact</b>Duplicate indexing, slow discovery, wasted crawl budget</div>
+    <div><b>Est. fix time</b>0.5–1 day (Next.js: robots.ts, sitemap.ts, metadataBase + alternates.canonical)</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> ship the three Next.js App-Router files (<code>app/robots.ts</code>, <code>app/sitemap.ts</code> generated from the CMS, canonical via the Metadata API), submit the sitemap in Search Console the same day. <strong>Priority: P0.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge critical">⛔ Critical</span><span class="badge conf">✓ 3/4 tools</span><span class="fid">TECH-3</span><h4>Broken contact links and dead navigation on the homepage</h4></div>
+  <p><code>tel:undefined</code> and <code>mailto:undefined</code> render live (unguarded CMS interpolation), and the six top-nav items (DESTINATION, PROJECTS, MEDIA ×2) are <code>href="#"</code>/empty — the three most important sections aren't crawlable from the header, and the two most important conversion actions are dead.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Homepage (nav: sitewide)</div>
+    <div><b>Evidence</b>SEOptimer, SEOmator, Semrush</div>
+    <div><b>SEO impact</b>Lost link equity to key sections; lost leads; accessibility failures</div>
+    <div><b>Est. fix time</b>0.5 day</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> guard the render (<code>{phone && &lt;a href={`tel:${phone}`}&gt;}</code>), populate the CMS field, grep for other unguarded interpolations; make nav items real links to hub pages with dropdowns on hover/focus. <strong>Priority: P0.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge high">▲ High</span><span class="badge conf">✓ 3/4 tools</span><span class="fid">TECH-4</span><h4>WAF blocks legitimate non-Google crawlers with 403</h4></div>
+  <p>Tool A verified 403s directly from two networks; Semrush found five fetch routes blocked; SEOptimer attributed inter-tool disagreement partly to crawler admission variance. Googlebot and Semrush get in; Bing, AI answer engines (ChatGPT, Perplexity, Claude), WhatsApp/LinkedIn preview bots largely don't — shares render bare and AI search can't read the site.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Sitewide</div>
+    <div><b>Evidence</b>AI audit (verified), Semrush, SEOptimer</div>
+    <div><b>SEO impact</b>Invisible in AI search; broken link previews in the channels Dubai property sells through</div>
+    <div><b>Est. fix time</b>0.5–1 day (WAF rules)</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> allowlist <code>Bingbot</code>, <code>facebookexternalhit</code>, <code>WhatsApp</code>, <code>LinkedInBot</code>, <code>Twitterbot</code>, <code>GPTBot</code>, <code>OAI-SearchBot</code>, <code>ClaudeBot</code>, <code>PerplexityBot</code>; rate-limit unknowns instead of blanket 403s. <strong>Priority: P0.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge high">▲ High</span><span class="badge conf">✓ 3/4 tools</span><span class="fid">TECH-5</span><h4>Host &amp; protocol canonicalization inconsistent (www / non-www / http)</h4></div>
+  <p>Boulevard is indexed under <code>www.pantheon.ae</code> while everything else is bare-domain (Tools A, D). Semrush additionally flagged the <code>http://</code> version responding without redirect, while SEOmator's redirect checks passed — meaning behavior likely differs by hostname/edge route (see §11). With no canonical tags (TECH-2), every variant competes independently.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Sitewide</div>
+    <div><b>Evidence</b>AI audit, Semrush, SEOmator (partial), SEOptimer (redirect chain 0.63s)</div>
+    <div><b>SEO impact</b>Equity split within the primary domain; duplicate URLs</div>
+    <div><b>Est. fix time</b>0.5 day (edge config) + verification</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> edge-level 301 of <code>http://*</code> and <code>www.*</code> → <code>https://pantheon.ae</code> in a single hop (test all four combinations with <code>curl -I</code>); add HSTS after confirming. <strong>Priority: P0.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge high">▲ High</span><span class="badge conf">✓ 2/4 tools</span><span class="fid">TECH-6</span><h4>30% of content only exists after JavaScript runs</h4></div>
+  <p>SEOptimer measured 30% of the page as client-rendered — the direct cause of the tools contradicting each other (H1 count, alt text, social links; §11). AI answer engines and many crawlers read the thin server-side version. Combined with the 0.4% text-to-HTML ratio (2.9 KB text in 722 KB markup, 656 KB of it inline JS), Google sees a page that is 99.6% code.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Homepage; likely templates sitewide</div>
+    <div><b>Evidence</b>SEOptimer (rendered-vs-source diff), SEOmator (text ratio)</div>
+    <div><b>SEO impact</b>Thin page for non-rendering agents; diluted relevance signals</div>
+    <div><b>Est. fix time</b>1–2 weeks (component audit)</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> server-render critical content (nav, H1, contact, social links, section intros); audit which components are client-only and why; trim the <code>__NEXT_DATA__</code> payload to fields each page renders. <strong>Priority: P1.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge medium">● Medium</span><span class="badge conf">✓ 3/4 tools</span><span class="fid">TECH-7</span><h4>Production media served from a staging bucket</h4></div>
+  <p>Logos, award badges, hero videos and even the favicon load from <code>pantheonmedia.blob.core.windows.net/staging-uploads/…</code>. A staging container can be wiped or locked at any time, taking the homepage's media with it.</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Homepage + CMS media sitewide</div>
+    <div><b>Evidence</b>SEOptimer, SEOmator, Semrush</div>
+    <div><b>SEO impact</b>Availability risk; no CDN caching on media</div>
+    <div><b>Est. fix time</b>1–2 days</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> migrate to a production container behind <code>media.pantheon.ae</code> (CDN), repoint the CMS. <strong>Priority: P1.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge medium">● Medium</span><span class="badge single">◇ Tool A only</span><span class="fid">TECH-8</span><h4>Single Azure origin, no CDN at DNS level; HTTP/1.1 only (Tool B)</h4></div>
+  <p>DNS points straight at one Azure IP (20.74.192.1) — no edge network for an international buyer audience. SEOptimer separately measured the site speaking HTTP/1.1 while loading 165 objects without multiplexing. One CDN deployment fixes both, plus gives granular bot rules (TECH-4).</p>
+  <div class="facts">
+    <div><b>Affected pages</b>Sitewide</div>
+    <div><b>Evidence</b>AI audit (DNS), SEOptimer (protocol)</div>
+    <div><b>SEO impact</b>High TTFB for remote users (CWV input); launch-day fragility</div>
+    <div><b>Est. fix time</b>2–3 days</div>
+  </div>
+  <div class="fix"><strong>Recommendation:</strong> Azure Front Door or Cloudflare: HTTP/2+3, Brotli, edge caching, origin shield. <strong>Priority: P1.</strong></div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge low">◇ Low</span><span class="badge conf">✓ 2/4 tools</span><span class="fid">TECH-9</span><h4>Housekeeping cluster</h4></div>
+  <p>Raw NetSuite scriptlet URL as the only external link (looks like phishing on a payments flow; missing <code>rel="noopener"</code>) — SEOmator + Semrush. DMARC at <code>p=none</code> (SEOptimer). "Elysée/Elysee" spelling drift and the "AL WASL GATER" label (SEOptimer, Semrush). llms.txt missing (SEOptimer, SEOmator).</p>
+  <div class="fix"><strong>Recommendation:</strong> branded <code>pantheon.ae/refunds</code> redirect; DMARC → <code>p=quarantine</code> after monitoring; pick one display spelling; add <code>/llms.txt</code>. <strong>Priority: P2. Est. 1–2 days total.</strong></div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="onpage"><span class="secno">4</span>On-Page SEO Analysis</h2>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Element</th><th>Consolidated finding</th><th>Tools</th><th>Severity</th></tr></thead>
+  <tbody>
+    <tr><td>Title tags</td><td>Homepage 67 chars (truncates ~60). Project pages one word ("VOXA", "Boulevard", "Elysee Heights"); destination pages &amp; one blog fall back to bare "Pantheon"; about-us truncates. Recommended: <em>"Pantheon Development | Real Estate Developer in Dubai &amp; RAK"</em> (58) + template <code>{Project} – {Units} in {Area} | Pantheon Development</code></td><td>A, B, C, D</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>Meta descriptions</td><td>Homepage 179 chars (~1,128px — truncates at ~920px). Recommended 149-char replacement leading with off-plan/JVC/JVT/RAK provided by two tools verbatim</td><td>B, C, D</td><td><span class="badge medium">● Medium</span></td></tr>
+    <tr><td>Headings</td><td>H1 copy bug ("Building&nbsp;&nbsp;Communities with Heart, Harmony Purpose" — double space, missing "&amp;"); section titles marked up as <strong>H6</strong> so the outline jumps h1→h6; duplicate H1s in rendered DOM (carousel clones)</td><td>B, C, D</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>Content quality</td><td>Text-to-HTML 0.4%; reading level grade 18.5 (postgraduate) where buyers skim; top extracted phrases are UI noise ("news read", "read more nov") not commercial terms</td><td>B, C</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>Keyword optimization</td><td>Money terms (off-plan, apartments for sale, payment plan, JVC/JVT/RAK) barely appear in titles/headings; every top-ranking keyword is a brand term</td><td>B, D</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>Image optimization</td><td>No <code>srcset</code> anywhere; 13 images missing width/height; 2 of first 3 images lazy-loaded (delays LCP) while 9 below-fold award images load eagerly; 4 content images hidden in CSS backgrounds; ~10.7 MB of images, est. 8.4 MB savings</td><td>B, C</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>Alt text</td><td>Source DOM: all present but generic ("logo" ×5). Rendered DOM: 219/314 missing (carousel clones). Both true — see §11</td><td>B, C</td><td><span class="badge medium">● Medium</span></td></tr>
+    <tr><td>Internal linking</td><td>Top-nav sections not crawlable (empty hrefs); blog cluster not wired to project pages; most-linked pages are correct (VOXA, contact, home) but only 4 backlinks each</td><td>A, B, C, D</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>URL structure</td><td><span class="badge positive">✓ Strength</span> — clean slugs, logical hierarchy (SEOmator 100/100). One typo slug on the legacy domain (<code>…-lll</code>) to preserve in the redirect map</td><td>A, C</td><td>—</td></tr>
+    <tr><td>Schema</td><td>Zero JSON-LD sitewide — see §10</td><td>B, C, D</td><td><span class="badge critical">⛔ Critical</span></td></tr>
+    <tr><td>Duplicate content</td><td>Whole-site duplication across domains (TECH-1) + www variant + no canonicals</td><td>A, B, C, D</td><td><span class="badge critical">⛔ Critical</span></td></tr>
+    <tr><td>Thin content</td><td>Project/destination pages carry less depth than broker equivalents (no floor plans, payment plans, price-from, FAQs on-page); 0.4% text ratio compounds it</td><td>B, C, D</td><td><span class="badge high">▲ High</span></td></tr>
+    <tr><td>E-E-A-T</td><td>No privacy-policy link, no on-page address, no author bylines/dates, awards present but unlabeled, no investment disclaimers — YMYL category holds real-estate to a higher bar</td><td>C (unique)</td><td><span class="badge medium">● Medium</span></td></tr>
+    <tr><td>Social markup</td><td><code>twitter:card</code> set but <strong>no og:image / og:url</strong> — WhatsApp/LinkedIn/X shares render as bare text; no social profile links in source DOM</td><td>B, C, D</td><td><span class="badge high">▲ High</span></td></tr>
+  </tbody>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="offpage"><span class="secno">5</span>Off-Page SEO Analysis</h2>
+
+<div class="kpi-row">
+  <div class="tile critical"><div class="label">Referring domains</div><div class="value">5–176</div><div class="note">Index conflict — few quality links either way</div></div>
+  <div class="tile critical"><div class="label">Authority Score</div><div class="value">26<small>/100</small></div><div class="note">Semrush; partly self-referential</div></div>
+  <div class="tile serious"><div class="label">Best backlinks</div><div class="value">Own sites</div><div class="note">+ directories &amp; agency portfolio</div></div>
+  <div class="tile neutral"><div class="label">Earned media links</div><div class="value">≈0</div><div class="note">Coverage exists (Zawya, CBNME, TradeArabia) — links don't point here</div></div>
+</div>
+
+<ul>
+  <li><strong>Backlinks &amp; referring domains:</strong> SEOptimer's index sees 91 backlinks from 5 domains; Semrush sees 176 referring domains. The composition is the real finding, and both agree on it: the top links are a web directory (viesearch), a bookmarking site (livewebmarks), the web agency's portfolio (avantuslabs) — and Pantheon's own other domains. Effectively zero earned editorial links.</li>
+  <li><strong>Anchor text:</strong> not deeply profiled by any tool; expect brand-dominated anchors given the source mix. Profile it in Ahrefs/Semrush after consolidation.</li>
+  <li><strong>Toxic links / spam risk:</strong> no tool flagged toxicity — the profile is too small to be toxic. Risk is <em>absence</em>, not poison. No disavow needed now.</li>
+  <li><strong>Link diversity:</strong> minimal — directories + self-owned. No news, no industry publications, no portal editorial, no award-body links despite displaying award badges.</li>
+  <li><strong>Authority:</strong> Score 26 with self-referential inflation means true earned authority is lower. This is why brokers with links earned weekly outrank the developer for its own project names.</li>
+</ul>
+
+<div class="callout"><strong>Off-page recommendations.</strong> (1) Consolidate domains first — stop splitting the little authority that exists (TECH-1). (2) Launch-driven digital PR: every groundbreaking/handover (the AED 800M VOXA story reached Zawya — verify the link is dofollow and points at pantheon.ae). (3) Founder commentary (Kalpesh Kinariwala) in Gulf News, Khaleej Times, Arabian Business. (4) Get into the "top Dubai developers" listicles where Emaar/DAMAC/Sobha/Ellington/Binghatti appear and Pantheon is absent. (5) Claim links from award bodies whose badges the site displays. (6) Portal profile links (Property Finder, Bayut developer pages). <strong>Goal: 5 → 50+ quality referring domains within two quarters.</strong></div>
+
+<!-- ================================================================ -->
+<h2 id="performance"><span class="secno">6</span>Performance Comparison</h2>
+<p>Field data (real Chrome users / CrUX) is what Google ranks on; lab data (Lighthouse) explains the causes. The tools' lab numbers differ because of device, throttling and network variance — the field numbers agree.</p>
+
+<h3>Field Core Web Vitals (mobile) — the numbers that count</h3>
+<div style="max-width:640px">
+  <div class="meter"><div class="mlabel"><span>INP — Interaction to Next Paint <strong style="color:var(--critical)">✗ FAIL</strong></span><b>503 ms / limit 200 ms</b></div><div class="track"><div class="fill bad" style="width:100%"></div></div></div>
+  <div class="meter"><div class="mlabel"><span>CLS — Cumulative Layout Shift <strong style="color:#b3552e">✗ fail (marginal)</strong></span><b>0.11 / limit 0.10</b></div><div class="track"><div class="fill mid" style="width:55%"></div></div></div>
+  <div class="meter"><div class="mlabel"><span>LCP — Largest Contentful Paint <strong style="color:var(--good)">✓ at threshold</strong></span><b>2.5 s / limit 2.5 s</b></div><div class="track"><div class="fill ok" style="width:50%"></div></div></div>
+</div>
+<p style="font-size:13px;color:var(--muted)">Sources: SEOptimer + Semrush (both quoting Google field data; identical values — high confidence). Desktop: LCP 3.5 s (fail), INP 92 ms (pass), CLS 0.01 (pass).</p>
+
+<h3>Lab measurements by tool</h3>
+<div class="tablewrap"><table>
+  <thead><tr><th>Metric</th><th>B · SEOptimer</th><th>C · SEOmator</th><th>D · Semrush/PSI</th><th>Target</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>Lighthouse Performance</td><td class="v-na">—</td><td class="num v-bad">63</td><td class="num v-bad">47 desktop · 73 mobile</td><td class="num">≥90</td><td class="v-bad">Fail on every run</td></tr>
+    <tr><td>Total page weight</td><td class="num v-bad">48.6 MB</td><td class="num v-bad">36.7 MB</td><td class="v-na">—</td><td class="num">&lt;5 MB</td><td class="v-bad">7–10× over; 36.5 MB is hero video</td></tr>
+    <tr><td>LCP (lab)</td><td class="v-na">—</td><td class="num v-bad">5.0 s</td><td class="num v-bad">4.9 s desktop</td><td class="num">≤2.5 s</td><td class="v-bad">Consistent</td></tr>
+    <tr><td>Time to Interactive</td><td class="num v-bad">27.6 s mobile</td><td class="num v-bad">6.0 s</td><td class="v-na">—</td><td class="num">&lt;5 s</td><td class="v-bad">Variance = throttling profiles; both fail</td></tr>
+    <tr><td>Speed Index</td><td class="num v-bad">14.2 s mobile</td><td class="num v-bad">4.0 s</td><td class="num v-bad">11.6 s mobile · 4.1 s desktop</td><td class="num">≤3.4 s</td><td class="v-bad">Fail on every run</td></tr>
+    <tr><td>Total Blocking Time</td><td class="v-na">—</td><td class="v-na">1.8 s JS exec</td><td class="num v-bad">360–500 ms</td><td class="num">≤200 ms</td><td class="v-bad">GTM + Pixel + Haptik + app JS</td></tr>
+    <tr><td>Server response (TTFB)</td><td class="num v-bad">1.54 s</td><td class="num v-bad">612 ms</td><td class="v-na">—</td><td class="num">&lt;500 ms</td><td class="v-bad">Uncached CMS calls; run variance</td></tr>
+    <tr><td>Fully loaded</td><td class="num v-bad">11.6 s</td><td class="v-na">—</td><td class="v-na">—</td><td class="num">&lt;5 s</td><td class="v-bad">Media payload</td></tr>
+    <tr><td>Protocol</td><td class="num v-mid">HTTP/1.1</td><td class="v-na">—</td><td class="v-na">—</td><td class="num">HTTP/2+</td><td class="v-mid">165 objects unmultiplexed</td></tr>
+    <tr><td>Redirect chain</td><td class="num v-mid">0.63 s</td><td class="v-good">pass</td><td class="v-na">—</td><td class="num">1 hop</td><td class="v-mid">Collapse to single 301</td></tr>
+    <tr><td>Unused JS</td><td class="num v-mid">456 KiB + 656 KB inline</td><td class="num v-mid">456 KiB + 26 KiB polyfills</td><td class="v-na">—</td><td class="num">—</td><td class="v-mid">Same number twice — reliable</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout"><strong>Performance fix order (consolidated).</strong> ① <strong>Media diet</strong> — it's 47 of the 48 MB: transcode hero videos (AV1/H.265, capped bitrate, poster first, load after interactive), AVIF/WebP via <code>next/image</code> with srcset (~8.4 MB saved). ② <strong>Verify &amp; enable text compression</strong> (tools conflict — §11) and long cache lifetimes. ③ <strong>HTTP/2/3 via CDN</strong> — one infra change speeding up all 165 requests. ④ <strong>Cache the document</strong> (ISR/CDN) to cut TTFB; collapse redirect chain. ⑤ <strong>Tame the main thread</strong>: GTM/Pixel/Haptik on <code>lazyOnload</code>, remove 456 KiB unused JS, defer the 1.13 s render-blocking chunk — this is the INP 503 ms fix. ⑥ <strong>Above-fold hygiene</strong>: hero <code>priority</code>/<code>fetchpriority="high"</code>, stop lazy-loading the first images, width/height everywhere (CLS 0.11 → &lt;0.1). GTmetrix was not among the provided tools; its waterfall would add nothing the Lighthouse runs haven't already shown.</div>
+
+<!-- ================================================================ -->
+<h2 id="security"><span class="secno">7</span>Security Analysis</h2>
+<div class="tablewrap"><table>
+  <thead><tr><th>Check</th><th>Status</th><th>Tools</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>HTTPS / SSL certificate</td><td class="v-good">✓ Valid, serving correctly</td><td>A, B, C</td><td>Keep. Semrush flagged http:// reachable on some route — verify all host/protocol hops and 301 them (TECH-5)</td></tr>
+    <tr><td>Mixed content</td><td class="v-good">✓ None reported</td><td>B, C</td><td>—</td></tr>
+    <tr><td>HSTS</td><td class="v-bad">✗ Missing</td><td>B, C, D</td><td rowspan="5">One <code>headers()</code> block in <code>next.config.js</code>: HSTS (max-age=31536000; includeSubDomains), X-Frame-Options SAMEORIGIN, X-Content-Type-Options nosniff, Referrer-Policy strict-origin-when-cross-origin, Permissions-Policy. Introduce <strong>CSP separately in report-only mode</strong> first — GTM/Pixel need allowlisting. Est. 0.5 day + testing</td></tr>
+    <tr><td>Content-Security-Policy</td><td class="v-bad">✗ Missing</td><td>B, C</td></tr>
+    <tr><td>X-Frame-Options</td><td class="v-bad">✗ Missing</td><td>B, C</td></tr>
+    <tr><td>X-Content-Type-Options</td><td class="v-bad">✗ Missing</td><td>B, C</td></tr>
+    <tr><td>Referrer / Permissions Policy</td><td class="v-bad">✗ Missing</td><td>B, C</td></tr>
+    <tr><td>External link hygiene</td><td class="v-mid">△ NetSuite raw scriptlet URL, target=_blank without noopener</td><td>B, C, D</td><td>rel="noopener noreferrer" + branded /refunds redirect</td></tr>
+    <tr><td>Email security</td><td class="v-mid">△ SPF + DMARC present, but p=none</td><td>B</td><td>Move to p=quarantine once reports are clean</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="a11y"><span class="secno">8</span>Accessibility Analysis</h2>
+<p>Remarkably consistent: <strong>73–74/100 in all three tools that measured it</strong> — same score, same failures. All fixes are markup-only except one contrast tweak.</p>
+<ul>
+  <li><strong>Contrast:</strong> body-text contrast failures (likely light grey on white) — target 4.5:1 <em>(B, C, D)</em></li>
+  <li><strong>ARIA / labels:</strong> 7 carousel buttons with no accessible name; newsletter input and a select with no label/name/id — also hurts autofill and form completion <em>(B, C, D)</em></li>
+  <li><strong>Landmarks:</strong> no <code>&lt;main&gt;</code>, no <code>&lt;header&gt;</code> <em>(D)</em></li>
+  <li><strong>Keyboard navigation:</strong> no skip-to-content link; the empty nav links (TECH-3) also break keyboard flow <em>(B, C, D)</em></li>
+  <li><strong>Media:</strong> both hero videos lack captions tracks <em>(B, C)</em>; heading-level jumps h1→h6 confuse screen-reader outlines <em>(B, C, D)</em></li>
+</ul>
+<div class="callout"><strong>Recommendation:</strong> one accessibility sprint (2–3 days): aria-labels on carousel controls, form labels, &lt;main&gt;/&lt;header&gt; landmarks, skip link, contrast tokens, captions or decorative marking on videos. Target Lighthouse ≥90. Several items double as SEO fixes (headings, labels, link text).</div>
+
+<!-- ================================================================ -->
+<h2 id="mobile"><span class="secno">9</span>Mobile SEO</h2>
+<ul>
+  <li><strong>Mobile friendliness:</strong> <span class="badge positive">✓ Strength</span> — proper viewport, responsive layout; SEOmator 100/100, no tool found responsive breakage.</li>
+  <li><strong>The mobile problem is speed, not layout:</strong> Speed Index 11.6–14.2 s and TTI up to 27.6 s on mid-range phones; field INP 503 ms means taps take half a second to respond — on the device class most UAE property buyers browse with.</li>
+  <li><strong>Touch elements:</strong> no crowding flagged; the dead tel:/mailto: taps (TECH-3) are the urgent touch issue.</li>
+  <li><strong>Viewport:</strong> correctly configured (all tools).</li>
+</ul>
+<div class="callout"><strong>Recommendation:</strong> ship the §6 performance plan mobile-first — the CWV failure is a mobile-only failure (desktop INP passes at 92 ms). Re-verify in Search Console's Core Web Vitals report ~28 days after fixes; field data trails deploys.</div>
+
+<!-- ================================================================ -->
+<h2 id="schema"><span class="secno">10</span>Structured Data Analysis</h2>
+<p><strong>Finding (3/4 tools, unanimous among those that crawled): zero Schema.org markup anywhere.</strong> No Organization, no LocalBusiness, no project markup, no breadcrumbs, no FAQ, no Article. Competing portals ship all of these and win the richer snippet — and entity grounding increasingly feeds AI-search answers.</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Schema to add</th><th>Where</th><th>Unlocks</th></tr></thead>
+  <tbody>
+    <tr><td><code>RealEstateAgent</code> / <code>Organization</code></td><td>Sitewide (layout) — name, logo, telephone, PostalAddress (Lamborghini Building, SZR), RERA licence, <code>sameAs</code> → Instagram, LinkedIn, YouTube, Facebook</td><td>Knowledge panel, brand entity, NAP consistency</td></tr>
+    <tr><td><code>Residence</code> / <code>ApartmentComplex</code> + <code>Offer</code></td><td>Each project page — geo, unit types, price-from, handover date</td><td>Rich results on project queries brokers currently win</td></tr>
+    <tr><td><code>BreadcrumbList</code></td><td>All templates</td><td>SERP breadcrumbs, structure signals</td></tr>
+    <tr><td><code>FAQPage</code></td><td>Project pages (payment plan, handover, ROI questions)</td><td>Expanded SERP real estate</td></tr>
+    <tr><td><code>Article</code> + author/date</td><td>Blog posts</td><td>E-E-A-T signals, Discover eligibility</td></tr>
+  </tbody>
+</table></div>
+<p>Two tools provided the same ready-to-use <code>RealEstateAgent</code> JSON-LD snippet (SEOmator §S-03, Semrush §O-06) — use it as the starting point. Validate with the Rich Results Test after deploy. Pair with <code>/llms.txt</code> for AI-engine readability.</p>
+
+<!-- ================================================================ -->
+<h2 id="dupes"><span class="secno">11</span>Duplicate Issues &amp; Conflicting Data</h2>
+
+<h3>11.1 Issues reported by multiple tools (listed once, merged above)</h3>
+<div class="tablewrap"><table>
+  <thead><tr><th>Issue</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Merged as</th></tr></thead>
+  <tbody>
+    <tr><td>Duplicate corporate domain(s)</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>TECH-1</td></tr>
+    <tr><td>No robots.txt / sitemap / canonical</td><td>(suspected)</td><td>✓</td><td>✓</td><td>✓</td><td>TECH-2</td></tr>
+    <tr><td>tel:/mailto:undefined + empty nav</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>TECH-3</td></tr>
+    <tr><td>WAF blocks non-Google bots</td><td>✓ verified</td><td>✓</td><td>—</td><td>✓</td><td>TECH-4</td></tr>
+    <tr><td>www/non-www split</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>TECH-5</td></tr>
+    <tr><td>Title 67 / description 179 / weak project titles</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>§4</td></tr>
+    <tr><td>H1 copy bug + H6 hierarchy</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>§4</td></tr>
+    <tr><td>Zero structured data</td><td>(unverified)</td><td>✓</td><td>✓</td><td>✓</td><td>§10</td></tr>
+    <tr><td>No og:image (bare shares)</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>§4</td></tr>
+    <tr><td>Security headers missing</td><td>—</td><td>✓</td><td>✓</td><td>(HSTS)</td><td>§7</td></tr>
+    <tr><td>Staging media bucket</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>TECH-7</td></tr>
+    <tr><td>CWV fail (INP 503 ms / CLS 0.11)</td><td>—</td><td>✓</td><td>✓ (lab)</td><td>✓</td><td>§6</td></tr>
+    <tr><td>Accessibility ~73</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>§8</td></tr>
+    <tr><td>NetSuite link exposure</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>TECH-9</td></tr>
+    <tr><td>Brokers outrank on project names</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>§5 / §12</td></tr>
+  </tbody>
+</table></div>
+
+<h4 class="sub">Unique findings by one tool only (still credible — no other tool measures these)</h4>
+<ul>
+  <li><strong>Semrush:</strong> 86.9% of organic traffic on one blog post (RAK cost-of-living); third owned domain <code>pantheonproperties.ae</code>; 488 keywords; ≈8.4K visits/mo; Authority Score 26</li>
+  <li><strong>SEOptimer:</strong> HTTP/1.1 protocol; 30% JS-rendered content; DMARC p=none; LinkedIn "pered" identity; YouTube 150K views / 176 subscribers</li>
+  <li><strong>SEOmator:</strong> E-E-A-T gaps (privacy policy, address, authors, dates, disclaimers); reading level 18.5; alt="logo" ×5; 4 content images in CSS backgrounds</li>
+  <li><strong>AI audit:</strong> microsites elysee3bypantheon.com &amp; 1rakcentral.com ranking #1 for their projects; Azure single-origin/no-CDN DNS; NAP inconsistency (Info@Pered.Ae, two phone formats); indexed-page inventory</li>
+</ul>
+
+<h3>11.2 Conflicting data — why the tools disagree, and which to trust</h3>
+<div class="tablewrap"><table>
+  <thead><tr><th>Conflict</th><th>Values</th><th>Why the difference exists</th><th>Most reliable</th></tr></thead>
+  <tbody>
+    <tr><td>Referring domains</td><td class="num">5 (B) vs 176 (D)</td><td>Different link indexes: SEOptimer's crawler index is small and counts live, followed links; Semrush's index is one of the largest and includes historical, lost and nofollow/self-owned links. Both agree the <em>quality</em> links are directories + own domains</td><td>Semrush for breadth; <strong>GSC + Ahrefs cross-check before the migration</strong>. Treat "quality earned domains" as &lt;10 today</td></tr>
+    <tr><td>Page weight</td><td class="num">48.6 MB (B) vs 36.7 MB (C)</td><td>Crawl-time variance: autoplaying hero videos buffer different amounts per viewport/session; lazy-loaded assets fire differently per crawler scroll behavior</td><td>Either — both are 7–10× over budget. Direction, not decimals, drives the fix</td></tr>
+    <tr><td>LCP</td><td class="num">2.5 s field vs 5.0 s lab</td><td>Field = 75th-percentile real users (many on fast UAE mobile networks); lab = throttled mid-range device simulation. Standard field/lab gap</td><td><strong>Field (CrUX)</strong> — it's what Google ranks on. Lab explains causes</td></tr>
+    <tr><td>Lighthouse performance</td><td class="num">63 (C) vs 47/73 (D)</td><td>Different runs, devices, throttling profiles; heavy hero media penalizes large desktop viewports more (desktop 47 &lt; mobile 73 — unusual but explained by the video payload)</td><td>Neither individually — the <em>range</em> (47–73, all failing) is the finding</td></tr>
+    <tr><td>Alt text</td><td>All present (C) vs 219/314 missing (B)</td><td><strong>Source vs rendered DOM.</strong> C audited server HTML (all images have alt, some generic); B audited the rendered page where carousel libraries clone slides without attributes</td><td>Both are true. Fix in the component so clones inherit alt (or aria-hidden clones)</td></tr>
+    <tr><td>H1 count</td><td>1 vs duplicates</td><td>Same rendering split: carousel clones duplicate the H1 after JS runs</td><td>Rendered DOM matters to Google — dedupe with aria-hidden clones</td></tr>
+    <tr><td>Social profile links</td><td>Present (B) vs absent (C, D)</td><td>Links are injected client-side; tools that don't execute JS don't see them — neither do AI engines</td><td>Server-render the footer (TECH-6)</td></tr>
+    <tr><td>HTTPS enforcement</td><td>100/100 (C) vs "http reachable" (D)</td><td>Likely differs by hostname (apex vs www) or edge route; or a race between edge and app redirects</td><td>Neither — <strong>verify all 4 protocol/host combinations with curl</strong>, then force single-hop 301s</td></tr>
+    <tr><td>Text compression</td><td>"No gzip/brotli" (C) vs "already compressed" (B)</td><td>Most plausibly the WAF serving different responses to different fetchers (some without Accept-Encoding negotiation), or doc vs static assets tested</td><td>Verify: <code>curl -sI -H "Accept-Encoding: br,gzip" https://pantheon.ae</code> → look for <code>content-encoding</code></td></tr>
+    <tr><td>Brand-query position</td><td>Not in top 10 (A) vs #1–#2 (B, C, D)</td><td>Different query phrasings: A tested "Pantheon Development Dubai <em>real estate</em>" (longer, more competitive); B/C/D tested the navigational "Pantheon Development Dubai". Both found the duplicate domain at #2–#5</td><td>GSC query report. Consolidated verdict: <strong>wins exact brand, loses brand+category, loses all project/category terms</strong></td></tr>
+    <tr><td>Overall score</td><td class="num">80 (C) vs 58 (D)</td><td>Different rubrics: SEOmator rewards the many passing basics (URL/mobile/HTML = 100); Semrush weights critical issues (missing plumbing, duplicate domains) far more heavily</td><td>Semrush is closer to ranking reality here — passing basics don't offset missing canonicals and a split domain</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout warn"><strong>The meta-finding.</strong> Half the conflicts above have the same two root causes: <strong>(1) 30% of the page renders client-side</strong>, so JS-executing and non-executing crawlers see different pages; and <strong>(2) the WAF admits crawlers inconsistently</strong>, so tools measured different responses. Fix TECH-4 and TECH-6 and future audits will converge — and so will what Google, Bing and AI engines see.</div>
+
+<!-- ================================================================ -->
+<h2 id="plan"><span class="secno">12</span>Priority Action Plan &amp; Checklist</h2>
+
+<h3>Critical — fix immediately (week 1; ~3–4 dev-days total)</h3>
+<ul class="check">
+  <li>Fix <code>tel:undefined</code> / <code>mailto:undefined</code> and the 6 empty nav links <em>(TECH-3 · 0.5d)</em></li>
+  <li>Ship <code>robots.ts</code>, <code>sitemap.ts</code>, canonical metadata; submit sitemap in GSC <em>(TECH-2 · 1d)</em></li>
+  <li>Force single host + protocol: verify all http/https × www/apex hops, single 301, then HSTS <em>(TECH-5 · 0.5d)</em></li>
+  <li>Retitle homepage (58c) + description (149c); template project/destination titles; fix H1 copy; promote H6→H2 <em>(§4 · 1d)</em></li>
+  <li>Add og:image (1200×630) + og:url sitewide <em>(§4 · 0.5d)</em></li>
+  <li>WAF: allowlist verified search/AI/social crawlers <em>(TECH-4 · 0.5d)</em></li>
+</ul>
+
+<h3>High priority (weeks 2–4)</h3>
+<ul class="check">
+  <li>Export backlink profiles of all owned domains; build the 301 map; execute pantheondevelopment.ae (+ pantheonproperties.ae) → pantheon.ae migration; GSC change-of-address <em>(TECH-1 · 1–2wk)</em></li>
+  <li>Performance sprint: hero-video diet, next/image everywhere, verify+enable compression, defer GTM/Pixel/Haptik, remove 456 KiB unused JS, fix lazy-loading order, width/height on media <em>(§6 · 1wk)</em></li>
+  <li>Deploy CDN (Azure Front Door / Cloudflare): HTTP/2+3, edge cache, granular bot rules <em>(TECH-8 · 2–3d)</em></li>
+  <li>Structured data rollout per §10 <em>(2–3d)</em></li>
+  <li>Security headers block (CSP report-only first) <em>(§7 · 0.5d)</em></li>
+  <li>Server-render the critical 30%: one H1, alt on rendered images, nav/contact/social in HTML <em>(TECH-6 · 1–2wk)</em></li>
+</ul>
+
+<h3>Medium priority (this quarter)</h3>
+<ul class="check">
+  <li>Accessibility sprint to Lighthouse ≥90 <em>(§8 · 2–3d)</em></li>
+  <li>Migrate media off the staging bucket to media.pantheon.ae <em>(TECH-7 · 1–2d)</em></li>
+  <li>Project pages that beat brokers: floor plans, payment plans, price-from, brochures, FAQs + markup <em>(§4)</em></li>
+  <li>E-E-A-T block: footer NAP + RERA licence + privacy policy; authors/dates on blog; investment disclaimer; unified info@pantheon.ae + one phone format <em>(§4 · 2d)</em></li>
+  <li>De-risk the 86.9% traffic post: update it, wire CTAs to One RAK Central + RAK destination <em>(0.5d)</em></li>
+  <li>Fold microsites (elysee3bypantheon.com, 1rakcentral.com) into /projects/ with 301s <em>(2d)</em></li>
+</ul>
+
+<h3>Low priority / ongoing</h3>
+<ul class="check">
+  <li>Digital PR &amp; link earning: launches, founder commentary, listicle placements, award-body links (goal 50+ quality domains in 2 quarters)</li>
+  <li>Content engine: destination hubs, blog→destination→project internal-link pyramid, grade-≤12 copy</li>
+  <li>llms.txt + quarterly AI-answer checks; /refunds redirect; DMARC p=quarantine; "Elysée" consistency</li>
+  <li>Measurement: UAE-geo rank tracking (~30 queries), GSC CWV + coverage weekly, monthly re-audit, quarterly full crawl</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="roadmap"><span class="secno">13</span>30-Day SEO Improvement Roadmap</h2>
+<div class="tablewrap"><table>
+  <thead><tr><th>Week</th><th>Theme</th><th>Ships</th><th>Success criteria</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Week 1</td><td>Bugs &amp; plumbing</td>
+      <td>All "Critical — fix immediately" items: contact links, nav links, robots/sitemap/canonicals, host+protocol 301s, titles/descriptions/H1, og:image, WAF allowlist</td>
+      <td>Sitemap live in GSC; external fetcher gets 200; zero undefined links; titles ≤60c sitewide</td>
+    </tr>
+    <tr>
+      <td>Week 2</td><td>Performance sprint</td>
+      <td>Hero-video transcode + poster-first; next/image conversion; compression verified/enabled; third-party scripts deferred; unused JS removed; CDN deployed with HTTP/2+3</td>
+      <td>Lab LCP ≤2.5 s; payload &lt;10 MB (interim); TBT ≤300 ms; Lighthouse perf ≥80</td>
+    </tr>
+    <tr>
+      <td>Week 3</td><td>Domain consolidation</td>
+      <td>Backlink export + 301 map reviewed; pantheondevelopment.ae + pantheonproperties.ae redirected page-to-page; GSC change-of-address; structured data rollout; security headers</td>
+      <td>All legacy URLs 301 in one hop; Rich Results Test passes; brand SERP shows one domain within 2–6 wks</td>
+    </tr>
+    <tr>
+      <td>Week 4</td><td>Content, trust &amp; measurement</td>
+      <td>Server-rendering fixes for the critical 30%; accessibility sprint; E-E-A-T footer block; staging-bucket migration; microsite folding; RAK-post internal links; rank tracking + dashboards armed</td>
+      <td>Lighthouse a11y ≥90; rendered==source for nav/contact/social; baseline dashboard captured for the 90-day review</td>
+    </tr>
+  </tbody>
+</table></div>
+<p style="font-size:13px;color:var(--muted)">Note: field Core Web Vitals in Search Console lag deploys by ~28 days — Week 2's fixes show in Google's data around Week 6. Judge Week 2 by lab numbers, Week 6+ by field.</p>
+
+<!-- ================================================================ -->
+<h2 id="score"><span class="secno">14</span>Final SEO Score &amp; Forecast</h2>
+
+<div class="kpi-row">
+  <div class="tile critical"><div class="label">Current score</div><div class="value">57<small>/100</small></div><div class="note">Grade D+ · consolidated</div></div>
+  <div class="tile good"><div class="label">After P0+P1 fixes</div><div class="value">82–88<small>/100</small></div><div class="note">Grade B+/A− · ~90 days</div></div>
+  <div class="tile good"><div class="label">Traffic forecast</div><div class="value">2–3×</div><div class="note">≈8.4K → 18–25K/mo in 2–3 quarters</div></div>
+  <div class="tile good"><div class="label">CWV forecast</div><div class="value">Pass</div><div class="note">INP ≤200 ms · CLS &lt;0.1 · LCP ≤2.5 s</div></div>
+</div>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Dimension</th><th>Today</th><th>Expected after roadmap</th><th>Driver</th></tr></thead>
+  <tbody>
+    <tr><td>Overall score</td><td class="num v-bad">57 (Semrush 58 / SEOmator 80)</td><td class="num v-good">82–88</td><td>Plumbing + performance + consolidation close most checks</td></tr>
+    <tr><td>Technical health</td><td class="v-bad">Missing plumbing, split domains</td><td class="v-good">Clean crawl, one canonical domain</td><td>TECH-1…TECH-5</td></tr>
+    <tr><td>Core Web Vitals</td><td class="v-bad">Mobile FAIL (INP 503 ms)</td><td class="v-good">Pass all three (field, ~day 60+)</td><td>§6 fix order; INP fix is script deferral</td></tr>
+    <tr><td>Organic traffic</td><td class="num v-mid">≈8.4K/mo, 87% one post</td><td class="num v-good">18–25K/mo, diversified</td><td>Consolidated authority + project pages earning own traffic</td></tr>
+    <tr><td>Rankings</td><td class="v-bad">Brand-only; brokers own project names</td><td class="v-good">Top-3 for project names; visible on "off plan JVC/JVT" terms</td><td>Migration + schema + project-page depth + PR links</td></tr>
+    <tr><td>Referring domains (quality)</td><td class="num v-bad">&lt;10 earned</td><td class="num v-good">50+ in two quarters</td><td>§5 link-earning program</td></tr>
+  </tbody>
+</table></div>
+<p style="font-size:13px;color:var(--muted)">Forecasts assume the P0/P1 roadmap ships on schedule and are based on typical recovery curves for domain consolidations at this authority level (1–2 quarters for non-brand movement). They are estimates, not guarantees; the migration is the dominant variable.</p>
+
+<!-- ================================================================ -->
+<h2 id="conclusion"><span class="secno">15</span>Conclusion — The Biggest Opportunities</h2>
+<ol>
+  <li><strong>Consolidate the empire into one domain.</strong> Four tools, one verdict: Pantheon's biggest SEO competitor is Pantheon. The 301 migration of pantheondevelopment.ae (+ pantheonproperties.ae + the microsites) into pantheon.ae is the single largest ranking lever available, and it costs engineering time, not media budget.</li>
+  <li><strong>Give Google the map it's never had.</strong> robots.txt, sitemap, canonicals and schema are a day or two of Next.js work — the cheapest fixes in this report, unblocking everything else.</li>
+  <li><strong>Win back your own project names.</strong> Every "Maison Elysee" or "VOXA" click a broker captures is a commissioned lead. Keyworded titles, project-page depth (floor plans, payment plans, FAQs) and Residence/FAQ schema put the official site where buyers expect it — above the resellers.</li>
+  <li><strong>Fix the phone-in-hand experience.</strong> Mobile INP of 503 ms and a 36–49 MB payload are costing conversions today, independent of rankings. The media diet + script deferral is a one-sprint job with a measurable CWV payoff.</li>
+  <li><strong>Start earning links like the brand you are.</strong> An award-winning developer with AED 800M launches and real press coverage has effectively zero earned links pointing at its main site. PR that links to pantheon.ae is the moat brokers can't copy — and after consolidation, every link finally lands in one place.</li>
+  <li><strong>Own the AI-search channel early.</strong> The WAF currently locks out the assistants buyers increasingly ask. Allowlist + schema + server-rendered content + llms.txt is a week of work, and the early-mover gap in Dubai real estate AI answers is wide open.</li>
+</ol>
+
+<footer>
+  Consolidated 7 July 2026 from four independent reports: AI SERP/DNS audit · SEOptimer-based crawl (171 checks + Lighthouse + backlinks) · SEOmator (171-check crawl + Lighthouse: Perf 63 / A11y 73 / BP 92 / SEO 100) · Semrush (site check 13:53 GST + PageSpeed field/lab + backlink index).<br>
+  Where tools conflicted, §11 records the discrepancy, its cause, and the recommended source of truth. Ranking data from US indexes; UAE-localized ordering may vary. Traffic/keyword figures are Semrush estimates — validate against Google Search Console.
+</footer>
+
+</div>
+</body>
+</html>
