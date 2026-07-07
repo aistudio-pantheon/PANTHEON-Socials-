@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pantheon.ae — Technical, SEO &amp; Ranking Audit — July 2026</title>
+<style>
+  :root {
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --hairline: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+    --good: #0ca30c;
+    --warning: #fab219;
+    --serious: #ec835a;
+    --critical: #d03b3b;
+    --good-bg: rgba(12,163,12,0.10);
+    --warning-bg: rgba(250,178,25,0.14);
+    --serious-bg: rgba(236,131,90,0.13);
+    --critical-bg: rgba(208,59,59,0.10);
+    --accent: #2a78d6;
+    --code-bg: #f0efec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --hairline: #2c2c2a;
+      --border: rgba(255,255,255,0.10);
+      --good-bg: rgba(12,163,12,0.16);
+      --warning-bg: rgba(250,178,25,0.14);
+      --serious-bg: rgba(236,131,90,0.15);
+      --critical-bg: rgba(208,59,59,0.18);
+      --accent: #3987e5;
+      --code-bg: #26261f;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.report-head {
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: 10px;
+  }
+  h1 { font-size: 30px; line-height: 1.25; letter-spacing: -0.01em; }
+  .subtitle { color: var(--ink-2); margin-top: 8px; max-width: 720px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .meta-row strong { color: var(--ink-2); font-weight: 600; }
+
+  h2 {
+    font-size: 21px; margin: 52px 0 6px; letter-spacing: -0.01em;
+    padding-top: 24px; border-top: 1px solid var(--hairline);
+  }
+  h2 .secno { color: var(--muted); font-weight: 600; margin-right: 10px; }
+  h3 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 10px 0; color: var(--ink-2); }
+  p strong, li strong { color: var(--ink); }
+  ul, ol { margin: 10px 0 10px 22px; color: var(--ink-2); }
+  li { margin: 5px 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.875em; background: var(--code-bg);
+    padding: 1px 6px; border-radius: 4px; color: var(--ink);
+  }
+
+  /* KPI tiles */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 24px 0; }
+  .tile {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .tile .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .tile .value { font-size: 34px; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+  .tile .note { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  .tile.critical .value { color: var(--critical); }
+  .tile.serious .value { color: var(--serious); }
+  .tile.warning .value { color: var(--ink); }
+  .tile.good .value { color: var(--good); }
+
+  /* severity badges: icon + label, never color alone */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 10px; border-radius: 999px; white-space: nowrap;
+  }
+  .badge.critical { background: var(--critical-bg); color: var(--critical); }
+  .badge.serious  { background: var(--serious-bg);  color: #b3552e; }
+  .badge.moderate { background: var(--warning-bg);  color: #8a6205; }
+  .badge.positive { background: var(--good-bg);     color: var(--good); }
+  .badge.info     { background: var(--code-bg);     color: var(--ink-2); }
+  @media (prefers-color-scheme: dark) {
+    .badge.serious  { color: var(--serious); }
+    .badge.moderate { color: var(--warning); }
+  }
+
+  /* finding cards */
+  .finding {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin: 14px 0;
+  }
+  .finding .fhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .finding .fid { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .finding h4 { font-size: 15.5px; display: inline; }
+  .finding p { font-size: 14.5px; }
+  .finding .fix {
+    margin-top: 10px; padding: 10px 14px; border-left: 3px solid var(--good);
+    background: var(--good-bg); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--ink-2);
+  }
+  .finding .fix strong { color: var(--ink); }
+
+  /* tables */
+  .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th {
+    text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--muted); font-weight: 700; padding: 10px 14px; border-bottom: 1px solid var(--hairline);
+    white-space: nowrap;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--ink); font-weight: 500; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .callout {
+    border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    background: var(--surface); border-radius: 0 10px 10px 0;
+    padding: 14px 18px; margin: 18px 0; font-size: 14.5px; color: var(--ink-2);
+  }
+  .callout.warn { border-left-color: var(--serious); }
+  .callout strong { color: var(--ink); }
+
+  .prio { font-weight: 700; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; white-space: nowrap; }
+  .prio.p0 { color: var(--critical); }
+  .prio.p1 { color: #b3552e; }
+  .prio.p2 { color: var(--accent); }
+  @media (prefers-color-scheme: dark) { .prio.p1 { color: var(--serious); } }
+
+  footer {
+    margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--hairline);
+    font-size: 12.5px; color: var(--muted);
+  }
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 22px; margin: 22px 0; }
+  .toc ol { margin: 6px 0 2px 20px; }
+  .toc li { margin: 3px 0; font-size: 14px; }
+  @media print {
+    body { background: #fff; }
+    .finding, .tablewrap, .tile, .toc, .callout { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="report-head">
+  <div class="eyebrow">Website Audit Report</div>
+  <h1>pantheon.ae — Technical, SEO &amp; Page-Ranking Audit</h1>
+  <p class="subtitle">Independent audit of PANTHEON Development's primary website, its sister domains, and its organic search footprint, with a prioritized improvement roadmap.</p>
+  <div class="meta-row">
+    <span><strong>Site:</strong> https://pantheon.ae/</span>
+    <span><strong>Audit date:</strong> 7 July 2026</span>
+    <span><strong>Prepared for:</strong> PANTHEON Development (aistudio@pantheon.ae)</span>
+  </div>
+</header>
+
+<div class="kpi-row">
+  <div class="tile critical"><div class="label">Critical findings</div><div class="value">2</div><div class="note">⛔ Fix within 30 days</div></div>
+  <div class="tile serious"><div class="label">Serious findings</div><div class="value">4</div><div class="note">▲ Fix within 60–90 days</div></div>
+  <div class="tile warning"><div class="label">Moderate findings</div><div class="value">5</div><div class="note">● Address in normal cycle</div></div>
+  <div class="tile good"><div class="label">Strengths</div><div class="value">3</div><div class="note">✓ Protect &amp; build on</div></div>
+</div>
+
+<div class="callout warn">
+  <strong>Headline finding — the brand is competing with itself.</strong> PANTHEON's search equity is split across at least <strong>four separate live domains</strong>: <code>pantheon.ae</code>, <code>pantheondevelopment.ae</code>, <code>elysee3bypantheon.com</code> and <code>1rakcentral.com</code>. In every project-name search tested, <code>pantheon.ae</code> did <em>not appear in the top 10 at all</em> — the rankings it should own are captured by the sister WordPress site, standalone microsites, and third-party broker portals. Consolidating this fragmentation is the single highest-impact action available.
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#method">Methodology &amp; limitations</a></li>
+    <li><a href="#domains">Domain architecture</a></li>
+    <li><a href="#technical">Technical audit</a></li>
+    <li><a href="#seo">SEO audit</a></li>
+    <li><a href="#ranking">Page-ranking audit</a></li>
+    <li><a href="#roadmap">Improvement roadmap</a></li>
+    <li><a href="#appendix">Appendix: page inventory &amp; verification checklist</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="method"><span class="secno">1</span>Methodology &amp; limitations</h2>
+<p>This audit was compiled from four independent sources: (a) search-engine index data for <code>pantheon.ae</code>, <code>www.pantheon.ae</code> and sister domains; (b) live ranking checks across six commercial and brand queries; (c) DNS resolution of all four brand domains; and (d) direct fetch attempts against the site from two separate networks.</p>
+<p><strong>Limitation:</strong> a full page-by-page crawl could not be completed, for two reasons that are themselves audit findings. First, the audit environment's egress policy blocks the host (fixable on our side). Second — and more importantly — <strong>pantheon.ae returned HTTP 403 Forbidden to standard automated fetchers</strong>, meaning the site's firewall refuses non-browser clients (see finding T-2). Items that require on-page verification (robots.txt, sitemap, structured data, Core Web Vitals, hreflang, image weight) are listed in the <a href="#appendix">appendix checklist</a> to be confirmed in a follow-up crawl. Ranking checks were run from a US search index; UAE-localized results may vary in ordering but the structural pattern (which domains appear at all) holds.</p>
+
+<!-- ============================================================ -->
+<h2 id="domains"><span class="secno">2</span>Domain architecture</h2>
+<p>Four brand-owned properties were found live and indexed simultaneously:</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Domain</th><th>Resolves to</th><th>Infrastructure</th><th>Role today</th><th>Problem</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>pantheon.ae<br><span style="color:var(--muted);font-weight:400">+ www.pantheon.ae</span></td>
+      <td class="num">20.74.192.1</td>
+      <td>Microsoft Azure (single origin, no CDN visible at DNS level)</td>
+      <td>New corporate site — projects, destinations, media, blog</td>
+      <td>Weak rankings; blocks bots; mixed www/non-www indexing</td>
+    </tr>
+    <tr>
+      <td>pantheondevelopment.ae<br><span style="color:var(--muted);font-weight:400">+ portal. and jvt. subdomains</span></td>
+      <td class="num">31.97.203.28</td>
+      <td>Hostinger, WordPress</td>
+      <td>Legacy corporate site — full duplicate: projects, blog, contact, broker portal</td>
+      <td>Duplicates pantheon.ae wholesale; outranks it on brand &amp; project queries</td>
+    </tr>
+    <tr>
+      <td>elysee3bypantheon.com</td>
+      <td colspan="2">Standalone campaign microsite</td>
+      <td>Landing pages for Elysée 3 / Maison Elysée III</td>
+      <td>Ranks #1 for "Maison Elysee III" — equity stranded off the main domain</td>
+    </tr>
+    <tr>
+      <td>1rakcentral.com</td>
+      <td colspan="2">Standalone campaign microsite</td>
+      <td>Landing page for One RAK Central</td>
+      <td>Ranks #1 for "One RAK Central" — equity stranded off the main domain</td>
+    </tr>
+  </tbody>
+</table></div>
+<p>Both corporate sites carry the <em>identical</em> homepage title — <em>"PANTHEON Development – Leading Real Estate Developer in Dubai &amp; UAE"</em> — and near-identical content, with no evidence that either canonicalizes to the other. Google is resolving the ambiguity by picking the older domain (<code>pantheondevelopment.ae</code>) for brand queries and ignoring <code>pantheon.ae</code> for project queries.</p>
+
+<!-- ============================================================ -->
+<h2 id="technical"><span class="secno">3</span>Technical audit</h2>
+
+<div class="finding">
+  <div class="fhead"><span class="badge critical">⛔ Critical</span><span class="fid">T-1</span><h4>Two full corporate websites live in parallel with no canonical relationship</h4></div>
+  <p><code>pantheon.ae</code> (Azure) and <code>pantheondevelopment.ae</code> (Hostinger/WordPress) both serve complete, overlapping sites: duplicate homepages, duplicate project pages (VOXA, Elysée series, Maison Elysée, One RAK Central), duplicate contact pages and parallel blogs. Search engines treat them as competitors, splitting backlinks, crawl attention and ranking signals between them — and the older domain is winning, which strands the investment made in the new site.</p>
+  <div class="fix"><strong>Fix:</strong> choose one canonical domain and 301-redirect the other, page-to-page. Given <code>pantheon.ae</code> is the strategic brand domain, map every <code>pantheondevelopment.ae</code> URL to its <code>pantheon.ae</code> equivalent (301, permanent), keep the redirects live indefinitely, and file a change-of-address in Google Search Console. Before pulling the trigger, export the backlink profile of both domains (Ahrefs/Semrush/GSC) to confirm which holds more authority — if the legacy domain's link profile is dramatically stronger, the redirect map matters even more. Keep <code>portal.</code> and <code>jvt.</code> broker tools on subdomains of the surviving site.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge serious">▲ Serious</span><span class="fid">T-2</span><h4>Firewall returns 403 Forbidden to legitimate automated clients</h4></div>
+  <p>Verified directly: standard (non-browser) HTTPS fetchers receive an outright <code>403</code> from pantheon.ae. Googlebot is clearly whitelisted (the site is indexed), but this posture blocks AI search and answer engines (ChatGPT, Perplexity, Claude, Gemini browsing), SEO audit tools, link-checkers and social link-preview bots. Buyers increasingly research Dubai property through AI assistants — a site those assistants cannot read is invisible in that channel.</p>
+  <div class="fix"><strong>Fix:</strong> review the WAF / bot-management rules (Azure App Gateway WAF or application-level UA filtering). Allow verified crawlers — at minimum <code>GPTBot</code>, <code>OAI-SearchBot</code>, <code>PerplexityBot</code>, <code>ClaudeBot</code>, <code>Google-Extended</code>, <code>bingbot</code>, <code>facebookexternalhit</code>, <code>LinkedInBot</code>, <code>WhatsApp</code> — and prefer rate-limiting over blanket 403s for unknown agents.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge serious">▲ Serious</span><span class="fid">T-3</span><h4>Inconsistent www / non-www canonicalization</h4></div>
+  <p>Most pages are indexed under <code>https://pantheon.ae/…</code> but the Boulevard project page is indexed as <code>https://www.pantheon.ae/projects/boulevard</code>. Both hostnames resolve to the same origin (20.74.192.1) and are being indexed independently, which means the host-level 301 and/or per-page canonical tags are missing or inconsistent — splitting equity even <em>within</em> the primary domain.</p>
+  <div class="fix"><strong>Fix:</strong> pick one host (recommend the bare <code>pantheon.ae</code>, matching the majority of the index), 301 every <code>www.</code> URL to it at the edge, and emit a matching <code>&lt;link rel="canonical"&gt;</code> on every page. Confirm in Search Console that both host properties are verified and the www variant drains.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge moderate">● Moderate</span><span class="fid">T-4</span><h4>Single Azure origin with no CDN visible at the DNS level</h4></div>
+  <p>Both hostnames resolve via A-record straight to one Azure IP. There is no Cloudflare / Azure Front Door / Akamai edge visible in DNS. For an audience spread across the UAE, India, Russia, China and Europe, every request travels to one region — hurting Time-to-First-Byte (a Core Web Vitals input) for remote buyers, and leaving the origin exposed to traffic spikes during launch campaigns.</p>
+  <div class="fix"><strong>Fix:</strong> put Azure Front Door or Cloudflare in front of the origin: edge caching for static assets, HTTP/2+3, Brotli compression, edge WAF (which also solves T-2 more granularly), and origin shielding. Typical TTFB improvement for distant users is 200–600&nbsp;ms.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge info">◇ Unverified</span><span class="fid">T-5</span><h4>On-page technical items pending crawl access</h4></div>
+  <p>Because of the 403 (T-2), the following could not be verified and must be confirmed in a follow-up crawl: <code>robots.txt</code> correctness, XML sitemap presence &amp; freshness, structured data, Core Web Vitals (LCP/CLS/INP), image formats &amp; weight, hreflang, redirect chains, and broken internal links. The <a href="#appendix">appendix</a> contains the full checklist.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="seo"><span class="secno">4</span>SEO audit</h2>
+
+<div class="finding">
+  <div class="fhead"><span class="badge critical">⛔ Critical</span><span class="fid">S-1</span><h4>Brand cannibalization: identical titles &amp; duplicate content across two domains</h4></div>
+  <p>The homepage title <em>"PANTHEON Development – Leading Real Estate Developer in Dubai &amp; UAE"</em> is used verbatim on both corporate sites, and project pages are duplicated across them. Result, verified in live SERPs: for the brand query <strong>"Pantheon Development Dubai real estate"</strong>, the #1 organic result is <code>www.pantheondevelopment.ae</code> — and <code>pantheon.ae</code> is not in the top 10. The flagship domain loses its own brand search.</p>
+  <div class="fix"><strong>Fix:</strong> resolved automatically by the T-1 domain consolidation. Until the 301 migration ships, as an interim measure add cross-domain <code>rel="canonical"</code> tags from the legacy pages to their pantheon.ae equivalents.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge serious">▲ Serious</span><span class="fid">S-2</span><h4>Weak, generic and inconsistent page titles across pantheon.ae</h4></div>
+  <p>Multiple indexed pages carry titles that waste their single strongest on-page signal:</p>
+  <ul>
+    <li><code>/destination/jumeirah-village-triangle</code> — titled just <strong>"Pantheon"</strong></li>
+    <li><code>/blogs/dubai-infrastructure-projects-…</code> — titled just <strong>"Pantheon"</strong></li>
+    <li><code>/projects/boulevard</code> — titled <strong>"Boulevard"</strong> (no brand, no location, no property keyword)</li>
+    <li><code>/projects/voxa</code> — titled <strong>"VOXA"</strong></li>
+    <li><code>/projects/elysee-heights</code> — titled <strong>"Elysee Heights"</strong></li>
+  </ul>
+  <p>Compare the sister site's equivalents ("VOXA: Studio, 1BHK &amp; 2BHK Apartments for Sale in JVT"), which are keyword-complete — one more reason it outranks pantheon.ae.</p>
+  <div class="fix"><strong>Fix:</strong> apply a title template sitewide. Projects: <em>{Project} – {Unit types} for Sale in {Community} | PANTHEON Development</em>. Destinations: <em>{Community} Area Guide &amp; New Projects | PANTHEON Development</em>. Blogs: keep the editorial headline + brand suffix. Keep to ~60 visible characters, front-load the keyword.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge moderate">● Moderate</span><span class="fid">S-3</span><h4>About page title exceeds display length</h4></div>
+  <p><code>/about-us</code> truncates in search results: <em>"About PANTHEON Development Award-Winning Dubai&nbsp;…"</em> — the message is cut mid-thought exactly where the value proposition should land.</p>
+  <div class="fix"><strong>Fix:</strong> rewrite to ≤60 characters, e.g. <em>"About PANTHEON | Award-Winning Dubai Developer"</em>, and craft a 150–160 character meta description carrying the rest.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge moderate">● Moderate</span><span class="fid">S-4</span><h4>Off-brand contact identity and inconsistent NAP data</h4></div>
+  <p>The public contact email is <code>Info@Pered.Ae</code> — a different domain than the website, in unusual mixed case. The phone number is also formatted differently across properties ("+971 45 235 235" on pantheon.ae vs "+971 4 523 5235" on the legacy site). Inconsistent Name-Address-Phone (NAP) data dilutes local-SEO entity signals and looks less trustworthy to high-ticket buyers.</p>
+  <div class="fix"><strong>Fix:</strong> publish <code>info@pantheon.ae</code> as the public address (aliasing to the Pered mailbox internally), standardize one E.164-style phone format, and mirror the identical NAP block on the website footer, Google Business Profile, and all portal listings.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge moderate">● Moderate</span><span class="fid">S-5</span><h4>Legacy-site URL slug typo being indexed</h4></div>
+  <p>The legacy domain's Elysée III page uses the slug <code>/projects/pantheon-elysee-lll/</code> — lowercase letter L three times instead of the Roman numeral III. It's indexed and ranking (#8 for the Maison Elysée III query), so it must be included in the T-1 redirect map rather than simply renamed, or the equity is lost.</p>
+  <div class="fix"><strong>Fix:</strong> map <code>…/pantheon-elysee-lll/</code> → <code>pantheon.ae/projects/pantheon-elysee-iii</code> explicitly in the 301 table.</div>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge info">◇ Unverified</span><span class="fid">S-6</span><h4>Structured data pending verification</h4></div>
+  <p>Could not confirm any Schema.org markup. For a developer site the expected set is: <code>Organization</code> (+ founder, logo, sameAs to socials), <code>ApartmentComplex</code>/<code>Residence</code> per project (with offer price, geo, amenity features), <code>BreadcrumbList</code>, <code>FAQPage</code> on project pages, and <code>Article</code> on blog posts. These unlock rich results and ground the entity for AI search.</p>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge positive">✓ Strength</span><span class="fid">S-7</span><h4>Active, well-targeted content program</h4></div>
+  <p>The blog is a genuine asset: 10+ indexed posts precisely aligned with buyer intent — JVC vs JVT comparisons, ROI guides, school guides for JVT and RAK, home-loan salary requirements, Al Marjan Island cost-of-living. This is exactly the long-tail strategy that competes when portals own the head terms. It needs only the title fixes (S-2) and internal links into project pages to convert its traffic.</p>
+</div>
+
+<div class="finding">
+  <div class="fhead"><span class="badge positive">✓ Strength</span><span class="fid">S-8</span><h4>Healthy indexation and earned media</h4></div>
+  <p>Core sections of pantheon.ae (home, about, contact, 9+ projects, 4 destinations, blog) are all indexed, and the brand earns third-party coverage (Construction Business News ME, TradeArabia) plus listings on every major portal (Property Finder, Bayut, Square Yards). The raw material for a strong link profile exists — it's currently just pointed at the wrong domains.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ranking"><span class="secno">5</span>Page-ranking audit</h2>
+<p>Six live queries were tested. The pattern is consistent: <strong>pantheon.ae does not appear in the top 10 for any commercial query tested</strong> — its own microsites, the legacy domain, and broker portals capture everything.</p>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Query</th><th>Intent</th><th>#1 result</th><th>pantheon.ae position</th><th>Who captures the demand</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>"Pantheon Development Dubai real estate"</td>
+      <td>Brand</td>
+      <td>pantheondevelopment.ae</td>
+      <td><span class="badge critical">⛔ Not in top 10</span></td>
+      <td>Legacy own domain, then aggregators (Dubai-Immo, Driven, Property Finder, Square Yards…)</td>
+    </tr>
+    <tr>
+      <td>"Maison Elysee III JVC Pantheon"</td>
+      <td>Project (flagship)</td>
+      <td>elysee3bypantheon.com</td>
+      <td><span class="badge critical">⛔ Not in top 10</span></td>
+      <td>Own microsite #1–2; brokers #3–7; legacy domain #8 &amp; #10</td>
+    </tr>
+    <tr>
+      <td>"VOXA JVT Pantheon apartments"</td>
+      <td>Project (current launch)</td>
+      <td>pantheondevelopment.ae/projects/voxa/</td>
+      <td><span class="badge critical">⛔ Not in top 10</span></td>
+      <td>Legacy domain #1; nine broker sites fill #2–10</td>
+    </tr>
+    <tr>
+      <td>"One RAK Central Pantheon Ras Al Khaimah"</td>
+      <td>Project (RAK expansion)</td>
+      <td>1rakcentral.com</td>
+      <td><span class="badge critical">⛔ Not in top 10</span></td>
+      <td>Own microsite #1; brokers &amp; news; legacy domain #5</td>
+    </tr>
+    <tr>
+      <td>"JVC off plan apartments developer"</td>
+      <td>Category head term</td>
+      <td>off-planproperties.ae</td>
+      <td><span class="badge serious">▲ Absent (both domains)</span></td>
+      <td>Portals (Property Finder, Bayut) and competitor developers (Binghatti, Ellington, Danube named in results)</td>
+    </tr>
+    <tr>
+      <td>site:pantheon.ae (indexation)</td>
+      <td>Diagnostic</td>
+      <td>—</td>
+      <td><span class="badge positive">✓ 20+ pages indexed</span></td>
+      <td>Indexation itself is healthy; the problem is authority, not discovery</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h3>What this means commercially</h3>
+<ul>
+  <li><strong>Brokers are monetizing your organic demand.</strong> For VOXA, nine of the top ten results are third-party brokers. Every buyer who lands there and converts costs a commission that direct capture on pantheon.ae would not.</li>
+  <li><strong>The microsites win battles but lose the war.</strong> elysee3bypantheon.com and 1rakcentral.com ranking #1 proves the demand is winnable — but each campaign builds equity on a disposable domain that dies with the campaign instead of compounding on pantheon.ae.</li>
+  <li><strong>Head terms are a content play, not a landing-page play.</strong> Portals own "JVC off plan"; the realistic wedge is the existing blog cluster (S-7) plus destination pages, internally linked to projects.</li>
+</ul>
+<p style="font-size:13px;color:var(--muted)">Checks run from a US index on 7 July 2026; UAE-localized ordering may differ. Recommend standing rank-tracking (Semrush/Ahrefs, UAE geo) + Search Console as the system of record.</p>
+
+<!-- ============================================================ -->
+<h2 id="roadmap"><span class="secno">6</span>Improvement roadmap</h2>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Priority</th><th>Action</th><th>Fixes</th><th>Effort</th><th>Expected impact</th></tr></thead>
+  <tbody>
+    <tr><td><span class="prio p0">P0 · 0–30d</span></td><td>Export backlink profiles of both corporate domains; decide the canonical domain (default: pantheon.ae); build the page-to-page 301 map including the <code>…lll</code> typo slug</td><td>T-1, S-1, S-5</td><td>Medium</td><td>Foundation for everything below</td></tr>
+    <tr><td><span class="prio p0">P0 · 0–30d</span></td><td>Force single host: 301 www→apex, canonical tags on every page; verify both host properties in Search Console</td><td>T-3</td><td>Low</td><td>Stops intra-domain equity split</td></tr>
+    <tr><td><span class="prio p0">P0 · 0–30d</span></td><td>Retitle all project, destination and blog pages via templates; fix about-us length; write meta descriptions</td><td>S-2, S-3</td><td>Low</td><td>Direct CTR &amp; relevance lift, days not months</td></tr>
+    <tr><td><span class="prio p0">P0 · 0–30d</span></td><td>Open the WAF to verified search/AI/social crawlers; re-test with an external fetcher</td><td>T-2</td><td>Low</td><td>Restores AI-search visibility &amp; link previews</td></tr>
+    <tr><td><span class="prio p1">P1 · 30–90d</span></td><td>Execute the domain migration: 301 pantheondevelopment.ae → pantheon.ae page-to-page; GSC change of address; keep broker portals on subdomains; update all portal &amp; social profile links to the canonical domain</td><td>T-1, S-1</td><td>High</td><td>Consolidates the entire brand's authority into one domain — the largest single ranking lever</td></tr>
+    <tr><td><span class="prio p1">P1 · 30–90d</span></td><td>Fold campaign microsites into the main site: 301 elysee3bypantheon.com and 1rakcentral.com to their <code>/projects/…</code> pages (or at minimum cross-canonical + consistent NAP); adopt a rule that future launches live at <code>pantheon.ae/projects/{name}</code> with a vanity redirect domain only</td><td>Ranking findings</td><td>Medium</td><td>Campaign equity compounds instead of expiring</td></tr>
+    <tr><td><span class="prio p1">P1 · 30–90d</span></td><td>Deploy CDN/edge (Azure Front Door or Cloudflare) with caching, Brotli, HTTP/3 and granular bot rules</td><td>T-4, T-2</td><td>Medium</td><td>TTFB/CWV gains for international buyers; launch-day resilience</td></tr>
+    <tr><td><span class="prio p1">P1 · 30–90d</span></td><td>Ship structured data: Organization, ApartmentComplex/Residence per project, BreadcrumbList, FAQPage, Article</td><td>S-6</td><td>Medium</td><td>Rich results; entity grounding for AI answers</td></tr>
+    <tr><td><span class="prio p1">P1 · 30–90d</span></td><td>Unify NAP: publish info@pantheon.ae, one phone format, identical footer block, claimed Google Business Profile</td><td>S-4</td><td>Low</td><td>Local pack eligibility; buyer trust</td></tr>
+    <tr><td><span class="prio p2">P2 · Ongoing</span></td><td>Content engine: extend the JVC/JVT/RAK blog clusters, add per-community pillar pages, and internally link every post to its relevant project page with descriptive anchors</td><td>S-7, head terms</td><td>Ongoing</td><td>The only realistic wedge against portals on category terms</td></tr>
+    <tr><td><span class="prio p2">P2 · Ongoing</span></td><td>Digital PR: point earned coverage (CBNME, TradeArabia, award announcements) at pantheon.ae; pursue links from the portals already listing projects</td><td>Authority gap</td><td>Ongoing</td><td>Closes the authority gap that keeps pantheon.ae out of the top 10</td></tr>
+    <tr><td><span class="prio p2">P2 · Ongoing</span></td><td>Measurement: UAE-geo rank tracking on ~30 queries (brand, 9 projects, 4 communities, top blogs), GSC monitoring of the migration, quarterly re-crawl</td><td>Governance</td><td>Low</td><td>Proves impact; catches regressions early</td></tr>
+    <tr><td><span class="prio p2">P2 · Later</span></td><td>Multilingual: hreflang'd Arabic and Russian versions of project + destination pages (largest non-English buyer segments)</td><td>Growth</td><td>High</td><td>Opens organic capture in buyers' native languages</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout">
+  <strong>Sequencing note.</strong> Do the P0 title fixes and WAF changes immediately — they're independent of the migration. But do <em>not</em> build new links or launch new campaigns pointing at pantheondevelopment.ae or new microsites in the meantime; every day of the status quo deepens the split that P1 has to unwind.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="appendix"><span class="secno">7</span>Appendix</h2>
+
+<h3>7.1 Indexed page inventory — pantheon.ae</h3>
+<div class="tablewrap"><table>
+  <thead><tr><th>Section</th><th>Indexed URLs found</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Core</td><td>/ · /about-us · /contact</td><td>About title truncates (S-3)</td></tr>
+    <tr><td>Projects (9)</td><td>/projects/pantheon-elysee-i · -ii · -iii · /projects/maison-elysee-i-and-ii · /projects/maison-elysee-iii · /projects/elysee-heights · /projects/boulevard · /projects/voxa (+ One RAK Central in navigation)</td><td>Boulevard indexed under www (T-3); several single-word titles (S-2)</td></tr>
+    <tr><td>Destinations</td><td>/destination/jumeirah-village-triangle (+ JVC, Al Wasl Gate, Ras Al Khaimah in navigation)</td><td>JVT page titled just "Pantheon" (S-2)</td></tr>
+    <tr><td>Blog (10+)</td><td>JVC investment · JVT ROI 2025 · JVT schools · JVT vs JVC · home-loan salary · JVT supermarkets · JVT family compounds · JVC growth 2024 · JVT bus timings · Al Marjan Island guide · RAK schools · Dubai infrastructure</td><td>Strong topical coverage (S-7); one post titled just "Pantheon"</td></tr>
+    <tr><td>Media</td><td>Features · Events · News (in navigation)</td><td>Indexation not individually confirmed</td></tr>
+  </tbody>
+</table></div>
+
+<h3>7.2 Follow-up verification checklist (requires crawl access)</h3>
+<ul>
+  <li>robots.txt — no accidental disallows; sitemap reference present</li>
+  <li>XML sitemap — exists, fresh, submitted in GSC, matches live URLs</li>
+  <li>Core Web Vitals — LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms on 4G mobile (PageSpeed Insights / CrUX)</li>
+  <li>Image audit — modern formats (WebP/AVIF), responsive srcset, lazy loading, alt text on renders</li>
+  <li>Broken links &amp; redirect chains — full-site crawl (Screaming Frog) once the WAF allows it</li>
+  <li>Meta descriptions — present and unique on every indexable page</li>
+  <li>Heading structure — one H1 per page, logical hierarchy</li>
+  <li>hreflang — none expected today; required when Arabic/Russian versions ship</li>
+  <li>Canonical tags — present on every page, self-referential, single host</li>
+  <li>Structured data — validate with Rich Results Test after S-6 ships</li>
+  <li>Security headers — HSTS, X-Content-Type-Options, CSP, referrer policy</li>
+</ul>
+
+<h3>7.3 Sources</h3>
+<ul style="font-size:13.5px">
+  <li>Search index &amp; SERP checks (7 July 2026, six queries): pantheon.ae, www.pantheon.ae, pantheondevelopment.ae, elysee3bypantheon.com, 1rakcentral.com, plus broker/portal results (Property Finder, Bayut, Square Yards, Tanami, Dubai-Immo, Driven Properties, and others)</li>
+  <li>DNS resolution: pantheon.ae &amp; www → 20.74.192.1 (Azure); pantheondevelopment.ae &amp; www → 31.97.203.28 (Hostinger)</li>
+  <li>Direct fetch tests against pantheon.ae from two networks (both refused with HTTP 403 for automated clients)</li>
+  <li>Earned-media checks: Construction Business News ME, TradeArabia coverage of the One RAK Central groundbreaking</li>
+</ul>
+
+<footer>
+  Prepared 7 July 2026 · Scope: pantheon.ae + brand domain ecosystem · Ranking data from a US search index; UAE-localized positions may vary in ordering.<br>
+  Items marked <em>Unverified</em> require the follow-up crawl described in §7.2 once WAF access is opened.
+</footer>
+
+</div>
+</body>
+</html>
